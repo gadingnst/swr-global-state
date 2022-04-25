@@ -18,13 +18,13 @@
 - Add the following content to that file:
 ```
 @gadingnst:registry=https://npm.pkg.github.com/
-//npm.pkg.github.com/:_authToken={YOUR_GITHUB_TOKEN}
+//npm.pkg.github.com/:_authToken=${GITHUB_PACKAGE_TOKEN}
 ```
 
-- You can generate `YOUR_GITHUB_TOKEN` in your profile settings here: https://github.com/settings/tokens
+- You can generate `GITHUB_PACKAGE_TOKEN` in your profile settings here: https://github.com/settings/tokens
 - Choose the token expiration according to what you want.
 - In creating Github Token, check only `read:packages` permissions, Click `Generate Token` button.
-- Then copy the token and replace it in the `{YOUR_GITHUB_TOKEN}`.
+- Then copy the token and replace it in the `{GITHUB_PACKAGE_TOKEN}`. Or you can just define it on your Environment Variables, see: https://stackoverflow.com/a/55578270/8112320
 - After that, run following command.
 ```
 npm install swr @gadingnst/store-swr
@@ -39,7 +39,7 @@ Create a new file for your global state on your root directory. Example: `stores
 ```js
 // stores/app.js
 
-export const APP_COUNT {
+export const APP_COUNT = {
   key: '@app/count', // (Required) state key
   initial: 0, // <- (Required) initial state
   persist: false // <- (Optional) if you want to persist the state to local storage, then set it to true.
