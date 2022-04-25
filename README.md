@@ -7,9 +7,13 @@ Zero-setup & simple state management for React Components with SWR. So you can f
 - [Getting Started](#getting-started)
   - [Install](#install)
   - [Usage](#usage)
-    - [Create a store](#create-a-store)
+    - [Create a store object](#create-a-store-object)
     - [Using store on your component](#using-store-on-your-component)
     - [TypeScript](#typescript)
+  - [Best Practice](#best-practice)
+    - [Custom hooks](#custom-hooks)
+    - [Using store on your component](#using-store-on-your-component-1)
+- [Demo](#demo)
 - [Publishing](#publishing)
 
 # Getting Started
@@ -27,38 +31,42 @@ Zero-setup & simple state management for React Components with SWR. So you can f
 - Then copy the token and replace it in the `{GITHUB_PACKAGE_TOKEN}`. Or you can just define it on your Environment Variables, see: https://stackoverflow.com/a/55578270/8112320
 - After that, run following command.
 ```
-npm install swr @gadingnst/store-swr
+npm install @gadingnst/store-swr
 
 //or
-yarn add swr @gadingnst/store-swr
+yarn add @gadingnst/store-swr
 ```
 
 ## Usage
-### Create a store
+### Create a store object
 Create a new file for your global state on your root directory. Example: `stores/app.js`
 ```js
-// stores/app.js
+// file: stores/app.js
 
 export const APP_COUNT = {
-  key: '@app/count', // (Required) state key
+  key: "@app/count", // (Required) state key
   initial: 0, // <- (Required) initial state
   persist: false // <- (Optional) if you want to persist the state to local storage, then set it to true.
 };
 ```
 ### Using store on your component
-```js
-// components/SetCountComponent.js
+```jsx
+// file: components/SetCountComponent.js
 
-import { useStore } from '@gadingnst/store-swr';
-import { APP_COUNT } from 'stores/app';
+import { useStore } from "@gadingnst/store-swr";
+import { APP_COUNT } from "stores/app";
 
 function SetCountComponent() {
   const [count, setCount] = useStore(APP_COUNT);
-
   return (
     <div>
-      <button onClick={() => setCount(count + 1)}>Increase Count</button>
-      <button onClick={() => setCount(count - 1)}>Decrease Count</button>
+      <button onClick={() => setCount(count - 1)}>
+        (-) Decrease Count
+      </button>
+      &nbsp;
+      <button onClick={() => setCount(count + 1)}>
+        (+) Increase Count
+      </button>
     </div>
   );
 }
@@ -66,15 +74,14 @@ function SetCountComponent() {
 export default SetCountComponent;
 ```
 
-```js
-// components/GetCountComponent.js
+```jsx
+// file: components/GetCountComponent.js
 
-import { useStore } from '@gadingnst/store-swr';
-import { APP_COUNT } from 'stores/app';
+import { useStore } from "@gadingnst/store-swr";
+import { APP_COUNT } from "stores/app";
 
 function GetCountComponent() {
   const [count] = useStore(APP_COUNT);
-
   return (
     <div>
       <p>Current Count: {count}</p>
@@ -87,11 +94,11 @@ export default GetCountComponent;
 
 ### TypeScript
 ```ts
-// stores/app.ts
-import type { Store } from '@gadingnst/store-swr';
+// file: stores/app.ts
+import type { Store } from "@gadingnst/store-swr";
 
 export const APP_COUNT: Store<number> = {
-  key: '@app/count',
+  key: "@app/count",
   initial: 0,
   persist: false
 };
@@ -99,6 +106,66 @@ export const APP_COUNT: Store<number> = {
 // interface Store is generic type. It must be passed type parameter
 ```
 
+## Best Practice
+### Custom hooks
+Instead of creating store object in `stores/app.js` file, you can wrap it into custom hooks. Example: `stores/count.js`.
+```js
+// file: stores/count.js
+
+import useStore from "@gadingnst/store-swr";
+
+const useCount = () => useStore({
+  key: "@app/count",
+  initial: 0,
+  persist: true
+});
+
+export default useCount;
+```
+
+### Using store on your component
+```jsx
+// file: components/SetCountComponent.js
+
+import useCount from "stores/count";
+
+function SetCountComponent() {
+  const [, setCount] = useCount(); // <- `[, ]` skipping first index of the array.
+  return (
+    <div>
+      <button onClick={() => setCount(prev => prev - 1)}>
+        (-) Decrease Count
+      </button>
+      &nbsp;
+      <button onClick={() => setCount(prev => prev + 1)}>
+        (+) Increase Count
+      </button>
+    </div>
+  );
+}
+
+export default SetCountComponent;
+```
+
+```jsx
+// file: components/GetCountComponent.js
+
+import useCount from "stores/count";
+
+function GetCountComponent() {
+  const [count] = useCount();
+  return (
+    <div>
+      <p>Current Count: {count}</p>
+    </div>
+  );
+}
+
+export default GetCountComponent;
+```
+
+# Demo
+> You can see demo repository [here](https://github.com/gadingnst/store-swr-demo)
 
 # Publishing
 - Before pushing your changes to Github, make sure that `version` in `package.json` is changed to newest version. Then run `npm install` for synchronize it to `package-lock.json`
