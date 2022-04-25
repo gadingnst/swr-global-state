@@ -25,10 +25,10 @@ Zero-setup & simple state management for React Components with SWR. So you can f
 //npm.pkg.github.com/:_authToken=${GITHUB_PACKAGE_TOKEN}
 ```
 
-- You can generate `GITHUB_PACKAGE_TOKEN` in your profile settings here: https://github.com/settings/tokens
+- You can generate `${GITHUB_PACKAGE_TOKEN}` in your profile settings here: https://github.com/settings/tokens
 - Choose the token expiration according to what you want.
 - In creating Github Token, check only `read:packages` permissions, Click `Generate Token` button.
-- Then copy the token and replace it in the `{GITHUB_PACKAGE_TOKEN}`. Or you can just define it on your Environment Variables, see: https://stackoverflow.com/a/55578270/8112320
+- Then copy the token and replace it in the `${GITHUB_PACKAGE_TOKEN}`. Or you can just define it on your Environment Variables, see: https://stackoverflow.com/a/55578270/8112320
 - After that, run following command.
 ```
 npm install @gadingnst/store-swr
