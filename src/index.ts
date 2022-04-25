@@ -61,7 +61,7 @@ export function useStore<T>(data: Store<T>) {
   useEffect(() => {
     if (isSupportCache(persist)) {
       const persistState = getCache<T>(key);
-      setState(persistState || initial);
+      setState(persistState ?? initial);
     }
   }, []);
 
