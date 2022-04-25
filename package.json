@@ -20,6 +20,7 @@
     "start": "tsdx watch",
     "build": "tsdx build",
     "test": "tsdx test",
+    "test:coverage": "tsdx test --ci --json --coverage --testLocationInResults --outputFile=report.json",
     "lint": "tsc --noEmit && eslint src --max-warnings 0",
     "lint:fix": "tsc --noEmit && eslint src --fix",
     "size": "size-limit",
