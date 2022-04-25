@@ -5,7 +5,7 @@
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
-  "module": "dist/use-store-swr.esm.js",
+  "module": "dist/store-swr.esm.js",
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/@gadingnst"
   },
@@ -32,11 +32,11 @@
   },
   "size-limit": [
     {
-      "path": "dist/use-store-swr.cjs.production.min.js",
+      "path": "dist/store-swr.cjs.production.min.js",
       "limit": "10 KB"
     },
     {
-      "path": "dist/use-store-swr.esm.js",
+      "path": "dist/store-swr.esm.js",
       "limit": "10 KB"
     }
   ],
