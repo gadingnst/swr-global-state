@@ -1,5 +1,5 @@
 # ♻️ Store SWR
-Zero-setup & simple state management for React Components with SWR. So you can focus on your awesome React Project and not waste another afternoon on the setup & configuring State Management. 🌄
+Zero-setup & simple state management for React Components with SWR. So you can focus on your awesome React Project and not waste another afternoon on the setup & configuring your global state. 🌄
 
 # Table of Contents
 - [♻️ Store SWR](#️-store-swr)
