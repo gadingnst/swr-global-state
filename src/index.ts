@@ -12,14 +12,23 @@ export interface Store<T> {
  * @param persist
  * @returns boolean if cache is supported
  */
-const isSupportCache = (persist?: boolean): boolean => window.localStorage && !!persist;
+const isSupportCache = (persist?: boolean): boolean =>
+  window.localStorage && !!persist;
+
+/**
+ *
+ * @param variable
+ * @returns boolean if variable is has value
+ */
+export const hasValue = <T>(variable: T): boolean =>
+  (typeof variable !== 'undefined' && variable !== null);
 
 /**
  *
  * @param key store key
  * @returns parsed persisted state
  */
-const getCache = <T = any>(key: Key): T => {
+export const getCache = <T = any>(key: Key): T => {
   const cache = window.localStorage.getItem(key as string) ?? 'null';
   return JSON.parse(cache);
 };
@@ -30,8 +39,8 @@ const getCache = <T = any>(key: Key): T => {
  * @param value to be cached
  * @returns void
  */
-const setCache = <T>(key: Key, value: T) => {
-  if (value) {
+export const setCache = <T>(key: Key, value: T) => {
+  if (hasValue(value)) {
     const data = JSON.stringify(value);
     window.localStorage.setItem(key as string, data);
   } else {
