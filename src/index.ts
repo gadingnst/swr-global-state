@@ -7,6 +7,8 @@ export interface Store<T> {
   persist?: boolean;
 }
 
+type MutatorCallback = <T>(state: T) => T;
+
 /**
  *
  * @param persist
@@ -61,10 +63,14 @@ export function useStore<T>(data: Store<T>) {
   });
 
   const setState: KeyedMutator<T> = (...args) => {
+    const [mutator, ...otherArgs] = args;
+    const newState = typeof mutator === 'function'
+      ? (mutator as MutatorCallback)(state as T)
+      : mutator;
     if (isSupportCache(persist)) {
-      setCache(key, args[0]);
+      setCache(key, newState);
     }
-    return mutate(...args);
+    return mutate(newState, ...otherArgs);
   };
 
   useEffect(() => {
