@@ -101,7 +101,7 @@ export const APP_COUNT: Store<number> = {
 
 
 # Publishing
-- Before pushing your changes to Github, make sure that `version` in `package.json` is changed to newest version.
+- Before pushing your changes to Github, make sure that `version` in `package.json` is changed to newest version. Then run `npm install` for synchronize it to `package-lock.json`
 - After your changes have been merged on branch `main`, you can publish the packages by creating new Relase here: https://github.com/gadingnst/store-swr/releases/new
 - Create new `tag`, make sure the `tag` name is same as the `version` in `package.json`.
 - You can write Release title and notes here. Or you can use auto-generated release title and notes.

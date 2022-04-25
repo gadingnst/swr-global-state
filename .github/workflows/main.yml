@@ -43,6 +43,30 @@ jobs:
         run: |
           npm run lint
 
+  test:
+    name: Unit Test
+    needs: install
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Load node_modules
+        uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: node_modules-${{ github.event.pull_request.head.sha }}
+      - name: Start Unit Testing
+        run: |
+          npm run test:coverage
+      - name: Generate Coverage Report
+        uses: ArtiomTr/jest-coverage-report-action@v2
+        with:
+          package-manager: npm
+          skip-step: all
+          coverage-file: report.json
+          base-coverage-file: report.json
+
   size:
     name: Build & Generate Size report
     runs-on: ubuntu-latest
