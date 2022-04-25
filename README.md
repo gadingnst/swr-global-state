@@ -39,7 +39,7 @@ Create a new file for your global state on your root directory. Example: `stores
 ```js
 // stores/app.js
 
-export const APP_COUNT {
+export const APP_COUNT = {
   key: '@app/count', // (Required) state key
   initial: 0, // <- (Required) initial state
   persist: false // <- (Optional) if you want to persist the state to local storage, then set it to true.
