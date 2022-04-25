@@ -44,7 +44,7 @@ const setCache = <T>(key: Key, value: T) => {
  * @param data state that to be shared or cached
  * @returns state and setter
  */
-function useStore<T>(data: Store<T>) {
+export function useStore<T>(data: Store<T>) {
   const { key, initial, persist } = data;
   const { cache } = useSWRConfig();
   const { data: state, mutate } = useSWR<T>(key, {
