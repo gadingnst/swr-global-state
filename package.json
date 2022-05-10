@@ -1,7 +1,7 @@
 {
   "name": "@gadingnst/store-swr",
   "author": "Sutan Gading Fadhillah Nasution <contact@gading.dev>",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",

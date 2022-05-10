@@ -32,7 +32,11 @@ export const hasValue = <T>(variable: T): boolean =>
  */
 export const getCache = <T = any>(key: Key): T => {
   const cache = window.localStorage.getItem(key as string) ?? 'null';
-  return JSON.parse(cache);
+  try {
+    return JSON.parse(cache);
+  } catch {
+    return cache as unknown as T;
+  }
 };
 
 /**
