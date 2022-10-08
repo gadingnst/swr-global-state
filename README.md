@@ -15,6 +15,7 @@ Zero-setup & simple state management for React Components with SWR. So you can f
     - [Using store on your component](#using-store-on-your-component-1)
 - [Demo](#demo)
 - [Publishing](#publishing)
+- [License](#license)
 
 # Getting Started
 ## Install
@@ -154,6 +155,7 @@ export default GetCountComponent;
 
 # Demo
 > You can see demo repository [here](https://github.com/gadingnst/swr-global-state-demo)
+> You can see live demo [here](https://swr-global-state-demo.gading.dev/)
 
 # Publishing
 - Before pushing your changes to Github, make sure that `version` in `package.json` is changed to newest version. Then run `npm install` for synchronize it to `package-lock.json`
@@ -161,3 +163,10 @@ export default GetCountComponent;
 - Create new `tag`, make sure the `tag` name is same as the `version` in `package.json`.
 - You can write Release title and notes here. Or you can use auto-generated release title and notes.
 - Click `Publish Release` button, then wait the package to be published.
+
+# License
+`swr-global-state` is freely distributable under the terms of the [MIT license](https://github.com/gadingnst/swr-global-state/blob/master/LICENSE).
+
+---
+
+Built with ❤️ by [Sutan Gading Fadhillah Nasution](https://github.com/gadingnst) on 2022
