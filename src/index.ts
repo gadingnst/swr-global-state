@@ -61,6 +61,8 @@ export const setCache = <T>(key: Key, value: T): void => {
  */
 export function useStore<T>(data: Store<T>): readonly [T, KeyedMutator<T>] {
   const { key, initial, persist } = data;
+
+  const subscribed = useRef(true);
   const { cache } = useSWRConfig();
   const { data: state, mutate } = useSWR<T>(key, {
     fallbackData: initial ?? cache.get(key)
@@ -78,7 +80,6 @@ export function useStore<T>(data: Store<T>): readonly [T, KeyedMutator<T>] {
   }, [key, state, persist]);
 
   useEffect(() => {
-    const subscribed = useRef(true);
     if (subscribed.current && isSupportPersistance(persist)) {
       const persistState = getCache<T>(key);
       setState(persistState ?? initial);
