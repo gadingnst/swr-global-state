@@ -1,11 +1,19 @@
 {
   "name": "swr-global-state",
   "author": "Sutan Gading Fadhillah Nasution <contact@gading.dev>",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "module": "dist/swr-global-state.esm.js",
+  "homepage": "https://github.com/gadingnst/swr-global-state",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gadingnst/swr-global-state.git"
+  },
+  "bugs": {
+    "url": "https://github.com/gadingnst/swr-global-state/issues"
+  },
   "files": [
     "dist"
   ],
