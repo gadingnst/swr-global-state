@@ -60,12 +60,15 @@
     "typescript",
     "react-state-management",
     "state-management",
+    "state-manager",
     "global-state-hooks",
+    "hooks",
     "state-hooks",
     "swr-state",
     "swr-store",
     "use-swr",
     "swr",
-    "javascript"
+    "javascript",
+    "react-utility"
   ]
 }
