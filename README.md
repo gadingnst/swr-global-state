@@ -1,8 +1,8 @@
-# ♻️ Store SWR
+# ♻️ SWR Global State
 Zero-setup & simple state management for React Components with SWR. So you can focus on your awesome React Project and not waste another afternoon on the setup & configuring your global state. 🌄
 
 # Table of Contents
-- [♻️ Store SWR](#️-store-swr)
+- [♻️ SWR Global State](#️-swr-global-state)
 - [Table of Contents](#table-of-contents)
 - [Getting Started](#getting-started)
   - [Install](#install)
@@ -18,23 +18,11 @@ Zero-setup & simple state management for React Components with SWR. So you can f
 
 # Getting Started
 ## Install
-- Create a new file named `.npmrc` in your project root directory.
-- Add the following content to that file:
 ```
-@gadingnst:registry=https://npm.pkg.github.com/
-//npm.pkg.github.com/:_authToken=${GITHUB_PACKAGE_TOKEN}
-```
-
-- You can generate `${GITHUB_PACKAGE_TOKEN}` in your profile settings here: https://github.com/settings/tokens
-- Choose the token expiration according to what you want.
-- In creating Github Token, check only `read:packages` permissions, Click `Generate Token` button.
-- Then copy the token and replace it in the `${GITHUB_PACKAGE_TOKEN}`. Or you can just define it on your Environment Variables, see: https://stackoverflow.com/a/55578270/8112320
-- After that, run following command.
-```
-npm install @gadingnst/store-swr
+npm install swr-global-state
 
 //or
-yarn add @gadingnst/store-swr
+yarn add swr-global-state
 ```
 
 ## Usage
@@ -53,7 +41,7 @@ export const APP_COUNT = {
 ```jsx
 // file: components/SetCountComponent.js
 
-import { useStore } from "@gadingnst/store-swr";
+import { useStore } from "swr-global-state";
 import { APP_COUNT } from "stores/app";
 
 function SetCountComponent() {
@@ -77,7 +65,7 @@ export default SetCountComponent;
 ```jsx
 // file: components/GetCountComponent.js
 
-import { useStore } from "@gadingnst/store-swr";
+import { useStore } from "swr-global-state";
 import { APP_COUNT } from "stores/app";
 
 function GetCountComponent() {
@@ -95,7 +83,7 @@ export default GetCountComponent;
 ### TypeScript
 ```ts
 // file: stores/app.ts
-import type { Store } from "@gadingnst/store-swr";
+import type { Store } from "swr-global-state";
 
 export const APP_COUNT: Store<number> = {
   key: "@app/count",
@@ -112,7 +100,7 @@ Instead of creating store object in `stores/app.js` file, you can wrap it into c
 ```js
 // file: stores/count.js
 
-import useStore from "@gadingnst/store-swr";
+import useStore from "swr-global-state";
 
 const useCount = () => useStore({
   key: "@app/count",
@@ -165,11 +153,11 @@ export default GetCountComponent;
 ```
 
 # Demo
-> You can see demo repository [here](https://github.com/gadingnst/store-swr-demo)
+> You can see demo repository [here](https://github.com/gadingnst/swr-global-state-demo)
 
 # Publishing
 - Before pushing your changes to Github, make sure that `version` in `package.json` is changed to newest version. Then run `npm install` for synchronize it to `package-lock.json`
-- After your changes have been merged on branch `main`, you can publish the packages by creating new Relase here: https://github.com/gadingnst/store-swr/releases/new
+- After your changes have been merged on branch `main`, you can publish the packages by creating new Relase here: https://github.com/gadingnst/swr-global-state/releases/new
 - Create new `tag`, make sure the `tag` name is same as the `version` in `package.json`.
 - You can write Release title and notes here. Or you can use auto-generated release title and notes.
 - Click `Publish Release` button, then wait the package to be published.
