@@ -154,8 +154,8 @@ export default GetCountComponent;
 ```
 
 # Demo
-> You can see demo repository [here](https://github.com/gadingnst/swr-global-state-demo)
-> You can see live demo [here](https://swr-global-state-demo.gading.dev/)
+- You can see demo repository [here](https://github.com/gadingnst/swr-global-state-demo)
+- You can see live demo [here](https://swr-global-state-demo.gading.dev/)
 
 # Publishing
 - Before pushing your changes to Github, make sure that `version` in `package.json` is changed to newest version. Then run `npm install` for synchronize it to `package-lock.json`
