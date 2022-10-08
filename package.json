@@ -1,7 +1,7 @@
 {
   "name": "swr-global-state",
   "author": "Sutan Gading Fadhillah Nasution <contact@gading.dev>",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -54,5 +54,21 @@
     "tsdx": "^0.14.1",
     "tslib": "^2.4.0",
     "typescript": "^4.8.4"
-  }
+  },
+  "keywords": [
+    "react",
+    "typescript",
+    "react-state-management",
+    "state-management",
+    "state-manager",
+    "global-state-hooks",
+    "hooks",
+    "state-hooks",
+    "swr-state",
+    "swr-store",
+    "use-swr",
+    "swr",
+    "javascript",
+    "react-utility"
+  ]
 }
