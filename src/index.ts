@@ -5,7 +5,7 @@ export type MutatorCallback = <T>(state: T) => T;
 
 /**
  * Type for returns from `useStore` hooks.
- * @see https://github.com/gadingnst/gading.dev/blob/main/src/hooks/stores/useAppTheme.ts for example case
+ * @see https://github.com/gadingnst/swr-global-state#example-custom-hooks-with-typescript for-example case
  */
 export type Store<T>= readonly [T, KeyedMutator<T>];
 
