@@ -13,6 +13,7 @@ Zero-setup & simple state management for React Components with SWR. So you can f
   - [Best Practice](#best-practice)
     - [Custom hooks](#custom-hooks)
     - [Using store on your component](#using-store-on-your-component-1)
+    - [Example custom hooks with TypeScript](#example-custom-hooks-with-typescript)
 - [Demo](#demo)
 - [Publishing](#publishing)
 - [License](#license)
@@ -84,9 +85,9 @@ export default GetCountComponent;
 ### TypeScript
 ```ts
 // file: stores/app.ts
-import type { Store } from "swr-global-state";
+import type { StoreParams } from "swr-global-state";
 
-export const APP_COUNT: Store<number> = {
+export const APP_COUNT: StoreParams<number> = {
   key: "@app/count",
   initial: 0,
   persist: false
@@ -104,9 +105,9 @@ Instead of creating store object in `stores/app.js` file, you can wrap it into c
 import useStore from "swr-global-state";
 
 const useCount = () => useStore({
-  key: "@app/count",
-  initial: 0,
-  persist: true
+  key: "@app/count", // (Required) state key
+  initial: 0, // <- (Required) initial state
+  persist: true // <- (Optional) if you want to persist the state to local storage, then set it to true.
 });
 
 export default useCount;
@@ -151,6 +152,20 @@ function GetCountComponent() {
 }
 
 export default GetCountComponent;
+```
+
+### Example custom hooks with TypeScript
+```ts
+// file: stores/count.ts
+
+import useStore, { Store } from "swr-global-state";
+
+const useCount = (): Store<number> => useStore<number>({
+  key: "@app/count",
+  initial: 0
+});
+
+export default useCount;
 ```
 
 # Demo

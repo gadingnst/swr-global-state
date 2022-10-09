@@ -1,13 +1,23 @@
 import { useCallback, useEffect, useRef } from 'react';
 import useSWR, { Key, KeyedMutator, useSWRConfig } from 'swr';
 
-export interface Store<T> {
+export type MutatorCallback = <T>(state: T) => T;
+
+/**
+ * Type for returns from `useStore` hooks.
+ * @see https://github.com/gadingnst/swr-global-state#example-custom-hooks-with-typescript for-example case
+ */
+export type Store<T>= readonly [T, KeyedMutator<T>];
+
+/**
+ * Type for params `useStore` hooks
+ * @see https://github.com/gadingnst/swr-global-state#create-a-store-object
+ */
+export interface StoreParams<T> {
   key: Key;
   initial: T;
   persist?: boolean;
 }
-
-type MutatorCallback = <T>(state: T) => T;
 
 /**
  * check is window is support local storage
@@ -22,7 +32,7 @@ const isSupportPersistance = (persist?: boolean): boolean =>
  * @param variable
  * @returns {boolean} boolean if variable is has value
  */
-export const hasValue = <T>(variable: T): boolean =>
+const hasValue = <T>(variable: T): boolean =>
   (typeof variable !== 'undefined' && variable !== null);
 
 /**
@@ -30,7 +40,7 @@ export const hasValue = <T>(variable: T): boolean =>
  * @param key store key
  * @returns {T} parsed persisted state
  */
-export const getCache = <T = any>(key: Key): T => {
+const getCache = <T = any>(key: Key): T => {
   const cache = window.localStorage.getItem(key as string) ?? 'null';
   try {
     return JSON.parse(cache);
@@ -45,7 +55,7 @@ export const getCache = <T = any>(key: Key): T => {
  * @param value to be cached
  * @returns {void}
  */
-export const setCache = <T>(key: Key, value: T): void => {
+const setCache = <T>(key: Key, value: T): void => {
   if (hasValue(value)) {
     const data = JSON.stringify(value);
     window.localStorage.setItem(key as string, data);
@@ -55,11 +65,12 @@ export const setCache = <T>(key: Key, value: T): void => {
 };
 
 /**
- * using global state with SWR
+ * Using global state with SWR helpers
  * @param data state that to be shared or cached
- * @returns {readonly [T, KeyedMutator<T>]} state and setter
+ * @returns {Store<T>} state and setter
+ * @see https://github.com/gadingnst/swr-global-state#best-practice for example best practice usage
  */
-export function useStore<T>(data: Store<T>): readonly [T, KeyedMutator<T>] {
+export function useStore<T>(data: StoreParams<T>): Store<T> {
   const { key, initial, persist } = data;
 
   const subscribed = useRef(true);
@@ -68,6 +79,12 @@ export function useStore<T>(data: Store<T>): readonly [T, KeyedMutator<T>] {
     fallbackData: initial ?? cache.get(key)
   });
 
+  /**
+   * State setter, use this to set the global state like `setState` from `useState` hooks.
+   * Can use callback function to get previous state and use it to set the state.
+   * @returns {KeyedMutator<T>}
+   * @see https://github.com/gadingnst/swr-global-state#using-store-on-your-component-1
+   */
   const setState: KeyedMutator<T> = useCallback((...args) => {
     const [mutator, ...otherArgs] = args;
     const newState = typeof mutator === 'function'
