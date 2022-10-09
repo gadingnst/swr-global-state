@@ -104,9 +104,9 @@ Instead of creating store object in `stores/app.js` file, you can wrap it into c
 import useStore from "swr-global-state";
 
 const useCount = () => useStore({
-  key: "@app/count",
-  initial: 0,
-  persist: true
+  key: "@app/count", // (Required) state key
+  initial: 0, // <- (Required) initial state
+  persist: true // <- (Optional) if you want to persist the state to local storage, then set it to true.
 });
 
 export default useCount;
