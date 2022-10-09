@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef } from 'react';
 import useSWR, { Key, KeyedMutator, useSWRConfig } from 'swr';
+import { hasValue } from './utils';
 
 export type MutatorCallback = <T>(state: T) => T;
 
@@ -26,14 +27,6 @@ export interface StoreParams<T> {
  */
 const isSupportPersistance = (persist?: boolean): boolean =>
   window.localStorage && !!persist;
-
-/**
- * check is variable has value
- * @param variable
- * @returns {boolean} boolean if variable is has value
- */
-const hasValue = <T>(variable: T): boolean =>
-  (typeof variable !== 'undefined' && variable !== null);
 
 /**
  * get cached value from local storage

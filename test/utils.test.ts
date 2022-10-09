@@ -1,4 +1,4 @@
-import { hasValue } from '../src';
+import { hasValue } from '../src/utils';
 
 describe('Utility test', () => {
   describe('hasValue() function', () => {
