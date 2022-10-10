@@ -20,6 +20,9 @@ Zero-setup & simple state management for React Components with SWR. So you can f
     - [Using store on your component](#using-store-on-your-component-1)
     - [Example custom hooks with TypeScript](#example-custom-hooks-with-typescript)
 - [Demo](#demo)
+- [FAQ](#faq)
+  - [Why should I use this?](#why-should-i-use-this)
+  - [If this library can cover `Redux`, how about promise state middleware like `redux-saga`, `redux-Thunk` or `redux-promise`?](#if-this-library-can-cover-redux-how-about-promise-state-middleware-like-redux-saga-redux-thunk-or-redux-promise)
 - [Publishing](#publishing)
 - [License](#license)
 - [Feedbacks and Issues](#feedbacks-and-issues)
@@ -177,6 +180,19 @@ export default useCount;
 # Demo
 - You can see demo repository [here](https://github.com/gadingnst/swr-global-state-demo)
 - You can see live demo [here](https://swr-global-state-demo.gading.dev/)
+
+# FAQ
+## Why should I use this?
+- If you want to manage your global state like `useState` as usual.
+- If you want to manage your global state without involving in setup Provider Component, Dispatcher, Reducer, etc.
+- If you want to see `Redux` or `Context API` alternative.
+- If you already use `SWR`, than you have no idea how to manage global state with `SWR` in client-side.
+- If you still use `Redux` or `Context API`, but you overwhelmed with their flow.
+
+## If this library can cover `Redux`, how about promise state middleware like `redux-saga`, `redux-Thunk` or `redux-promise`?
+[SWR](https://swr.vercel.app) can cover this. [see](https://github.com/vercel/swr/discussions/587).
+
+At this point. `swr-global-state` only handle global state in client-side. If you want to handle state from requested API, maybe you should use library like [SWR](https://swr.vercel.app) or [TanStack Query](https://tanstack.com/query/v4). But I Recommend use `SWR`, because this library is based on `SWR`, so you don't need install other library.
 
 # Publishing
 - Before pushing your changes to Github, make sure that `version` in `package.json` is changed to newest version. Then run `npm install` for synchronize it to `package-lock.json`

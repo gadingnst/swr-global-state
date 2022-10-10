@@ -1,14 +1,24 @@
 import { useCallback, useEffect, useRef } from 'react';
-import useSWR, { Key, KeyedMutator, useSWRConfig } from 'swr';
+import useSWR, { Key, MutatorOptions, useSWRConfig } from 'swr';
 import { hasValue } from './utils';
 
-export type MutatorCallback = <T>(state: T) => T;
+/**
+ * Based on `MutatorCallback<Data = any>` from swr
+ */
+export type StateMutatorCallback<T = any> = (currentData: T) =>
+  T|Promise<T>|undefined;
+
+/**
+ * Based on `KeyedMutator<Data>` from swr
+ */
+export type StateMutator<T> = (data?: T|Promise<T>|StateMutatorCallback<T>, opts?: boolean|MutatorOptions<T>) =>
+  Promise<T|undefined>;
 
 /**
  * Type for returns from `useStore` hooks.
  * @see https://github.com/gadingnst/swr-global-state#example-custom-hooks-with-typescript for-example case
  */
-export type Store<T, K = T>= readonly [T, KeyedMutator<K>];
+export type Store<T, K = T>= readonly [T, StateMutator<K>];
 
 /**
  * Type for params `useStore` hooks
@@ -75,19 +85,15 @@ export function useStore<T>(data: StoreParams<T>): Store<T> {
   /**
    * State setter, use this to set the global state like `setState` from `useState` hooks.
    * Can use callback function to get previous state and use it to set the state.
-   * @returns {KeyedMutator<T>}
+   * @returns {StateMutator<T>} SWR Mutation
    * @see https://github.com/gadingnst/swr-global-state#using-store-on-your-component-1
    */
-  const setState: KeyedMutator<T> = useCallback((...args) => {
-    const [mutator, ...otherArgs] = args;
-    const newState = typeof mutator === 'function'
-      ? (mutator as MutatorCallback)(state as T)
-      : mutator;
+  const setState: StateMutator<T> = useCallback((data?: T|StateMutatorCallback<T>|Promise<T>, ...args) => {
     if (isSupportPersistance(persist)) {
-      setCache(key, newState);
+      setCache(key, data);
     }
-    return mutate(newState, ...otherArgs);
-  }, [key, state, persist]);
+    return mutate(data as T, ...args) as Promise<T|undefined>;
+  }, [key, persist]);
 
   useEffect(() => {
     if (subscribed.current && isSupportPersistance(persist)) {
