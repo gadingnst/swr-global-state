@@ -186,7 +186,7 @@ export default useCount;
 - If you want to manage your global state like `useState` as usual.
 - If you want to manage your global state without involving in setup Provider Component, Dispatcher, Reducer, etc.
 - If you want to see `Redux` or `Context API` alternative.
-- If you already use `SWR`, than you have no idea how to manage global state with `SWR` in client-side.
+- If you already use `SWR`, then you have no idea how to manage global state with `SWR` in client-side.
 - If you still use `Redux` or `Context API`, but you overwhelmed with their flow.
 
 ## If this library can cover `Redux`, how about promise state middleware like `redux-saga`, `redux-Thunk` or `redux-promise`?
