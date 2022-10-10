@@ -1,16 +1,16 @@
 import { useCallback, useEffect, useRef } from 'react';
-import useSWR, { Key, MutatorOptions, useSWRConfig } from 'swr';
+import useSWR, { Key, useSWRConfig } from 'swr';
 import { hasValue } from './utils';
 
 /**
  * Based on `MutatorCallback<Data = any>` from swr
  */
-export type StateMutatorCallback<T = any> = (currentData: T) => T|Promise<T>|undefined;
+export type StateMutatorCallback<T = any> = (currentData: T) => T|undefined;
 
 /**
  * Based on `KeyedMutator<Data>` from swr
  */
-export type StateMutator<T> = (data?: T|Promise<T>|StateMutatorCallback<T>, opts?: boolean|MutatorOptions<T>) => Promise<T|undefined>;
+export type StateMutator<T> = (data?: T|StateMutatorCallback<T>) => void;
 
 /**
  * Type for returns from `useStore` hooks.
@@ -86,14 +86,14 @@ export function useStore<T>(data: StoreParams<T>): Store<T> {
    * @returns {StateMutator<T>} SWR Mutation
    * @see https://github.com/gadingnst/swr-global-state#using-store-on-your-component-1
    */
-  const setState: StateMutator<T> = useCallback(async(data?: T|StateMutatorCallback<T>|Promise<T>, ...args) => {
+  const setState: StateMutator<T> = useCallback((data?: T|StateMutatorCallback<T>) => {
     const newState = typeof data === 'function'
-      ? await (data as StateMutatorCallback)(state)
+      ? (data as StateMutatorCallback)(state)
       : data;
     if (isSupportPersistance(persist)) {
       setCache(key, newState);
     }
-    return mutate(newState, ...args) as Promise<T|undefined>;
+    mutate(newState);
   }, [key, state, persist]);
 
   useEffect(() => {
