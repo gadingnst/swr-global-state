@@ -4,7 +4,7 @@
 [![npm](https://img.shields.io/npm/dt/swr-global-state.svg)](https://npm-stat.com/charts.html?package=swr-global-state)
 [![GitHub issues](https://img.shields.io/github/issues/gadingnst/swr-global-state.svg)](https://github.com/gadingnst/swr-global-state/issues)
 
-Zero-setup & simple state management for React Components with SWR. So you can focus on your awesome React Project and not waste another afternoon on the setup & configuring your global state. 🌄
+Zero-setup & simple global state management for React Components with SWR. So you can focus on your awesome React Project and not waste another afternoon on the setup & configuring your global state. 🌄
 
 # Table of Contents
 - [♻️ SWR Global State](#️-swr-global-state)
