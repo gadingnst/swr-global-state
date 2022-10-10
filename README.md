@@ -4,7 +4,7 @@
 [![npm](https://img.shields.io/npm/dt/swr-global-state.svg)](https://npm-stat.com/charts.html?package=swr-global-state)
 [![GitHub issues](https://img.shields.io/github/issues/gadingnst/swr-global-state.svg)](https://github.com/gadingnst/swr-global-state/issues)
 
-Zero-setup & simple global state management for React Components with SWR. So you can focus on your awesome React Project and not waste another afternoon on the setup & configuring your global state. 🌄
+Zero-setup & simple global state management for React Components based on [SWR](https://swr.vercel.app) helpers. With this library, you can focus on your awesome React Project and not waste another afternoon on the setup & configuring your global state. 🌄
 
 # Table of Contents
 - [♻️ SWR Global State](#️-swr-global-state)
@@ -22,7 +22,7 @@ Zero-setup & simple global state management for React Components with SWR. So yo
 - [Demo](#demo)
 - [FAQ](#faq)
   - [Why should I use this?](#why-should-i-use-this)
-  - [If this library can cover `Redux`, how about promise state middleware like `redux-saga`, `redux-Thunk` or `redux-promise`?](#if-this-library-can-cover-redux-how-about-promise-state-middleware-like-redux-saga-redux-thunk-or-redux-promise)
+  - [If this library can cover `Redux`, how about asynchronous state management like `redux-saga`, `redux-thunk`, or `redux-promise`?](#if-this-library-can-cover-redux-how-about-asynchronous-state-management-like-redux-saga-redux-thunk-or-redux-promise)
 - [Publishing](#publishing)
 - [License](#license)
 - [Feedbacks and Issues](#feedbacks-and-issues)
@@ -31,8 +31,9 @@ Zero-setup & simple global state management for React Components with SWR. So yo
 ## Install
 ```
 npm install swr-global-state
-
-//or
+```
+or
+```
 yarn add swr-global-state
 ```
 
@@ -178,21 +179,24 @@ export default useCount;
 ```
 
 # Demo
-- You can see demo repository [here](https://github.com/gadingnst/swr-global-state-demo)
-- You can see live demo [here](https://swr-global-state-demo.gading.dev/)
+You can see:
+- live demo [here](https://swr-global-state-demo.gading.dev/)
+- demo repository [here](https://github.com/gadingnst/swr-global-state-demo)
 
 # FAQ
 ## Why should I use this?
 - If you want to manage your global state like `useState` as usual.
-- If you want to manage your global state without involving in setup Provider Component, Dispatcher, Reducer, etc.
+- If you want to manage your global state without involving in setting up Provider Component, Dispatcher, Reducer, etc.
 - If you want to see `Redux` or `Context API` alternative.
-- If you already use `SWR`, but you have no idea how to manage global state with `SWR` in client-side.
-- If you still use `Redux` or `Context API`, but you overwhelmed with their flow.
+- If you're already use `SWR`, but you have no idea how to manage synchronous global state with `SWR` on client-side.
+- If you're still use `Redux` or `Context API`, but you are overwhelmed with their flow.
 
-## If this library can cover `Redux`, how about promise state middleware like `redux-saga`, `redux-Thunk` or `redux-promise`?
+## If this library can cover `Redux`, how about asynchronous state management like `redux-saga`, `redux-thunk`, or `redux-promise`?
 [SWR](https://swr.vercel.app) can cover this. [see](https://github.com/vercel/swr/discussions/587).
 
-At this point. `swr-global-state` only handle global state in client-side. If you want to handle state from requested API, maybe you should use library like [SWR](https://swr.vercel.app) or [TanStack Query](https://tanstack.com/query/v4). But I Recommend use `SWR`, because this library is based on `SWR`, so you don't need install other library.
+At this point, `swr-global-state` only handles synchronous global state in client-side. If you want to handle the asynchronous global state requested from the API, maybe you should use a library like [SWR](https://swr.vercel.app) or [TanStack Query](https://tanstack.com/query/v4) . But I recommend `SWR`, because this `swr-global-state` is built and depends on `SWR` helpers, so you don't need to install other libraries.
+
+So the conclusion is, if you use [SWR](https://www.npmjs.com/package/swr) + [swr-global-state](https://www.npmjs.com/package/swr-global-state), you basically don't need to use `Redux` or `Context API` anymore.
 
 # Publishing
 - Before pushing your changes to Github, make sure that `version` in `package.json` is changed to newest version. Then run `npm install` for synchronize it to `package-lock.json`
