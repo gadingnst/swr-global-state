@@ -2,7 +2,7 @@
   "name": "swr-global-state",
   "author": "Sutan Gading Fadhillah Nasution <contact@gading.dev>",
   "description": "Zero-setup & simple state management for React Components",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
