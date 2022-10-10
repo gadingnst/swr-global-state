@@ -65,18 +65,23 @@
   },
   "keywords": [
     "react",
+    "swr",
+    "hooks",
+    "javascript",
     "typescript",
     "react-state-management",
     "state-management",
     "state-manager",
     "global-state-hooks",
-    "hooks",
     "state-hooks",
     "swr-state",
     "swr-store",
     "use-swr",
-    "swr",
-    "javascript",
-    "react-utility"
+    "use-store",
+    "client-state",
+    "react-utility",
+    "hooks-utility",
+    "redux-alternative",
+    "context-alternative"
   ]
 }
