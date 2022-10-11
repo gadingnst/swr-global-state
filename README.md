@@ -178,17 +178,19 @@ const useCount: StoreHooks<number> = createStore({
 export default useCount;
 ```
 
-or you still can wrap `useStore` with yourself
+or you still can wrap `useStore` in another function with yourself
 
 ```ts
 // file: stores/count.ts
 
 import useStore, { Store } from "swr-global-state";
 
-const useCount = (): Store<number> => useStore<number>({
-  key: "@app/count",
-  initial: 0
-});
+function useCount(): Store<number> {
+  return useStore<number>({
+    key: "@app/count",
+    initial: 0
+  });
+}
 
 export default useCount;
 ```
@@ -209,7 +211,7 @@ You can see:
 ## If this library can cover `Redux`, how about asynchronous state management like `redux-saga`, `redux-thunk`, or `redux-promise`?
 [SWR](https://swr.vercel.app) can cover this. [see](https://github.com/vercel/swr/discussions/587).
 
-At this point, `swr-global-state` only handles synchronous global state in client-side. If you want to handle the asynchronous global state requested from the API, maybe you should use a library like [SWR](https://swr.vercel.app) or [TanStack Query](https://tanstack.com/query/v4) . But I recommend `SWR`, because this `swr-global-state` is built and depends on `SWR` helpers, so you don't need to install other libraries.
+At this point, `swr-global-state` only handles synchronous global state in client-side. If you want to handle the asynchronous global state requested from the API, maybe you should use a library like [SWR](https://swr.vercel.app) or [TanStack Query](https://tanstack.com/query/v4) . But I recommend `SWR`, because this `swr-global-state` is built and depends on `SWR` helpers, and you don't need to install other libraries.
 
 So the conclusion is, if you use [SWR](https://www.npmjs.com/package/swr) + [swr-global-state](https://www.npmjs.com/package/swr-global-state), you basically don't need to use `Redux` or `Context API` anymore.
 
