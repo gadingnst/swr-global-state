@@ -26,6 +26,9 @@ Zero-setup & simple global state management for React Components based on [SWR](
 - [Publishing](#publishing)
 - [License](#license)
 - [Feedbacks and Issues](#feedbacks-and-issues)
+- [Support](#support)
+  - [Global](#global)
+  - [Indonesia](#indonesia)
 
 # Getting Started
 ## Install
@@ -227,6 +230,13 @@ So the conclusion is, if you use [SWR](https://www.npmjs.com/package/swr) + [swr
 
 # Feedbacks and Issues
 Feel free to open issues if you found any feedback or issues on `swr-global-state`. And feel free if you want to contribute too! 😄
+
+# Support
+## Global
+[![ko-fi](https://www.ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/gadingnst)
+## Indonesia
+- [Trakteer](https://trakteer.id/sutanlab)
+- [Karyakarsa](https://karyakarsa.com/sutanlab)
 
 ---
 
