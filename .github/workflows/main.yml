@@ -1,5 +1,7 @@
 name: Continuous Integration
 on:
+  push:
+    branches: [main]
   pull_request:
     branches: [main]
 
@@ -28,6 +30,7 @@ jobs:
 
   lint:
     name: Lint
+    if: github.event_name == 'pull_request'
     needs: install
     runs-on: ubuntu-latest
     steps:
@@ -45,6 +48,7 @@ jobs:
 
   test:
     name: Unit Test
+    if: github.event_name == 'pull_request'
     needs: install
     runs-on: ubuntu-latest
     steps:
@@ -67,8 +71,27 @@ jobs:
           coverage-file: report.json
           base-coverage-file: report.json
 
+  build:
+    name: Build
+    if: github.event_name == 'push'
+    needs: install
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Load node_modules
+        uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: node_modules-${{ github.event.pull_request.head.sha }}
+      - name: Start Building
+        run: |
+          npm run build
+
   size:
     name: Build & Generate Size report
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     env:
       CI_JOB_NUMBER: 1
