@@ -108,13 +108,13 @@ export const APP_COUNT: StoreParams<number> = {
 
 ## Best Practice
 ### Custom hooks
-Instead of creating store object in `stores/app.js` file, you can wrap it into custom hooks. Example: `stores/count.js`.
+Instead of creating store object in `stores/app.js` file, you can create a custom hooks with `createStore()`. Example: `stores/count.js`.
 ```js
 // file: stores/count.js
 
-import useStore from "swr-global-state";
+import { createStore } from "swr-global-state";
 
-const useCount = () => useStore({
+const useCount = createStore({
   key: "@app/count", // (Required) state key
   initial: 0, // <- (Required) initial state
   persist: true // <- (Optional) if you want to persist the state to local storage, then set it to true.
@@ -165,6 +165,21 @@ export default GetCountComponent;
 ```
 
 ### Example custom hooks with TypeScript
+```ts
+// file: stores/count.ts
+
+import { createStore, StoreHooks } from "swr-global-state";
+
+const useCount: StoreHooks<number> = createStore({
+  key: "@app/count",
+  initial: 0
+});
+
+export default useCount;
+```
+
+or you still can wrap `useStore` with yourself
+
 ```ts
 // file: stores/count.ts
 

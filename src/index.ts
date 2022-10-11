@@ -14,9 +14,15 @@ export type StateMutator<T> = (data?: T|StateMutatorCallback<T>) => void;
 
 /**
  * Type for returns from `useStore` hooks.
- * @see https://github.com/gadingnst/swr-global-state#example-custom-hooks-with-typescript for-example case
+ * @see https://github.com/gadingnst/swr-global-state#example-custom-hooks-with-typescript for example case
  */
 export type Store<T, K = T>= readonly [T, StateMutator<K>];
+
+/**
+ * Type for return wrapper function that wraps `Store<T, K>`
+ * @see https://github.com/gadingnst/swr-global-state#example-custom-hooks-with-typescript for example case
+ */
+export type StoreHooks<T, K = T> = () => Store<T, K>;
 
 /**
  * Type for params `useStore` hooks
@@ -69,7 +75,7 @@ const setCache = <T>(key: Key, value: T): void => {
  * Using global state with SWR helpers
  * @param data state that to be shared or cached
  * @returns {Store<T>} state and setter
- * @see https://github.com/gadingnst/swr-global-state#best-practice for example best practice usage
+ * @see https://github.com/gadingnst/swr-global-state#create-a-store-object for example usage
  */
 export function useStore<T>(data: StoreParams<T>): Store<T> {
   const { key, initial, persist } = data;
@@ -107,6 +113,16 @@ export function useStore<T>(data: StoreParams<T>): Store<T> {
   }, []);
 
   return [state as T, setState] as const;
+}
+
+/**
+ * Create custom hooks that wraps `useStore` to another function.
+ * @param data state that to be shared or cached
+ * @returns {StoreHooks<T>} state and setter
+ * @see https://github.com/gadingnst/swr-global-state#best-practice for example best practice usage
+ */
+export function createStore<T>(data: StoreParams<T>): StoreHooks<T> {
+  return () => useStore(data);
 }
 
 export default useStore;
