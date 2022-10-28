@@ -1,11 +1,11 @@
-import { useCallback, useEffect, useRef } from 'react';
+import type { SWRConfiguration } from 'swr/dist/types';
+import { useCallback } from 'react';
 import useSWR, { Key, useSWRConfig } from 'swr';
-import { hasValue } from './utils';
 
 /**
  * Based on `MutatorCallback<Data = any>` from swr
  */
-export type StateMutatorCallback<T = any> = (currentData: T) => T|undefined;
+export type StateMutatorCallback<T = any> = (currentData: T) => Promise<T|undefined>;
 
 /**
  * Based on `KeyedMutator<Data>` from swr
@@ -26,103 +26,73 @@ export type StoreHooks<T, K = T> = () => Store<T, K>;
 
 /**
  * Type for params `useStore` hooks
+ * @param key unique string that will become a key to get the cache data
+ * @param initial starter value if there no cached state on client
+ * @param persist object to handle custom cache, it consits `onSetData` and `onGetData` callback.
  * @see https://github.com/gadingnst/swr-global-state#create-a-store-object
  */
 export interface StoreParams<T> {
   key: Key;
   initial: T;
-  persist?: boolean;
+  persist?: {
+    onSetData: (key: Key, data: T, isServer?: boolean) => Promise<void>;
+    onGetData: (key: Key, isServer?: boolean) => Promise<T|undefined>;
+  };
 }
 
 /**
- * check is window is support local storage
- * @param persist
- * @returns {boolean} boolean if cache is supported
+ * Check current environment is on server or not.
+ * @param w current window
+ * @returns {boolean} current environment is on server or not
  */
-const isSupportPersistance = (persist?: boolean): boolean =>
-  window.localStorage && !!persist;
-
-/**
- * get cached value from local storage
- * @param key store key
- * @returns {T} parsed persisted state
- */
-const getCache = <T = any>(key: Key): T => {
-  const cache = window.localStorage.getItem(key as string) ?? 'null';
-  try {
-    return JSON.parse(cache);
-  } catch {
-    return cache as unknown as T;
-  }
-};
-
-/**
- * cache the value into local storage
- * @param key store key
- * @param value to be cached
- * @returns {void}
- */
-const setCache = <T>(key: Key, value: T): void => {
-  if (hasValue(value)) {
-    const data = JSON.stringify(value);
-    window.localStorage.setItem(key as string, data);
-  } else {
-    window.localStorage.removeItem(key as string);
-  }
-};
+const isServer = (w: Window & typeof globalThis): boolean => typeof w === 'undefined';
 
 /**
  * Using global state with SWR helpers
- * @param data state that to be shared or cached
+ * @param {StoreParams<T>} data state that to be shared or cached
  * @returns {Store<T>} state and setter
  * @see https://github.com/gadingnst/swr-global-state#create-a-store-object for example usage
  */
-export function useStore<T>(data: StoreParams<T>): Store<T> {
-  const { key, initial, persist } = data;
+export function useStore<T>(data: StoreParams<T>, swrConfig?: SWRConfiguration): Store<T> {
+  const {
+    key,
+    initial,
+    persist
+  } = data;
 
-  const subscribed = useRef(true);
   const { cache } = useSWRConfig();
-  const { data: state, mutate } = useSWR<T>(key, {
-    fallbackData: initial ?? cache.get(key)
-  });
+  const { data: state, mutate } = useSWR<T>(key, () => (
+    cache.get(key)
+      ?? persist?.onGetData(key, isServer(window))
+      ?? initial
+  ), swrConfig);
 
   /**
    * State setter, use this to set the global state like `setState` from `useState` hooks.
    * Can use callback function to get previous state and use it to set the state.
+   * @param {T|StateMutatorCallback<T>}
    * @returns {StateMutator<T>} SWR Mutation
    * @see https://github.com/gadingnst/swr-global-state#using-store-on-your-component-1
    */
-  const setState: StateMutator<T> = useCallback((data?: T|StateMutatorCallback<T>) => {
-    const newState = typeof data === 'function'
-      ? (data as StateMutatorCallback)(state)
-      : data;
-    if (isSupportPersistance(persist)) {
-      setCache(key, newState);
-    }
+  const setState: StateMutator<T> = useCallback(async(data?: T|StateMutatorCallback<T>) => {
+    const newState = typeof data !== 'function'
+      ? data
+      : await (data as StateMutatorCallback)(state);
+    persist?.onSetData(key, newState, isServer(window));
     mutate(newState);
   }, [key, state, persist]);
-
-  useEffect(() => {
-    if (subscribed.current && isSupportPersistance(persist)) {
-      const persistState = getCache<T>(key);
-      setState(persistState ?? initial);
-    }
-    return () => {
-      subscribed.current = false;
-    };
-  }, []);
 
   return [state as T, setState] as const;
 }
 
 /**
  * Create custom hooks that wraps `useStore` to another function.
- * @param data state that to be shared or cached
+ * @param {StoreParams<T>} data state that to be shared or cached
  * @returns {StoreHooks<T>} state and setter
  * @see https://github.com/gadingnst/swr-global-state#best-practice for example best practice usage
  */
-export function createStore<T>(data: StoreParams<T>): StoreHooks<T> {
-  return () => useStore(data);
+export function createStore<T>(data: StoreParams<T>, swrConfig?: SWRConfiguration): StoreHooks<T> {
+  return () => useStore(data, swrConfig);
 }
 
 export default useStore;
