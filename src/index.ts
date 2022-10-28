@@ -5,24 +5,12 @@ import useSWR, { Key, useSWRConfig } from 'swr';
 /**
  * Based on `MutatorCallback<Data = any>` from swr
  */
-export type StateMutatorCallback<T = any> = (currentData: T) => Promise<T|undefined>;
+export type StateMutatorCallback<T = any> = (currentData: T) => T|Promise<T|undefined>;
 
 /**
  * Based on `KeyedMutator<Data>` from swr
  */
 export type StateMutator<T> = (data?: T|StateMutatorCallback<T>) => void;
-
-/**
- * Type for returns from `useStore` hooks.
- * @see https://github.com/gadingnst/swr-global-state#example-custom-hooks-with-typescript for example case
- */
-export type Store<T, K = T>= readonly [T, StateMutator<K>];
-
-/**
- * Type for return wrapper function that wraps `Store<T, K>`
- * @see https://github.com/gadingnst/swr-global-state#example-custom-hooks-with-typescript for example case
- */
-export type StoreHooks<T, K = T> = () => Store<T, K>;
 
 /**
  * Type for params `useStore` hooks
@@ -35,8 +23,8 @@ export interface StoreParams<T> {
   key: Key;
   initial: T;
   persist?: {
-    onSetData: (key: Key, data: T, isServer?: boolean) => Promise<void>;
-    onGetData: (key: Key, isServer?: boolean) => Promise<T|undefined>;
+    onSetData: (key: Key, data: T, isServer?: boolean) => void|Promise<void>;
+    onGetData: (key: Key, isServer?: boolean) => T|Promise<T|undefined>;
   };
 }
 
@@ -50,10 +38,9 @@ const isServer = (w: Window & typeof globalThis): boolean => typeof w === 'undef
 /**
  * Using global state with SWR helpers
  * @param {StoreParams<T>} data state that to be shared or cached
- * @returns {Store<T>} state and setter
  * @see https://github.com/gadingnst/swr-global-state#create-a-store-object for example usage
  */
-export function useStore<T>(data: StoreParams<T>, swrConfig?: SWRConfiguration): Store<T> {
+export function useStore<T>(data: StoreParams<T>, swrConfig?: SWRConfiguration) {
   const {
     key,
     initial,
@@ -61,10 +48,10 @@ export function useStore<T>(data: StoreParams<T>, swrConfig?: SWRConfiguration):
   } = data;
 
   const { cache } = useSWRConfig();
-  const { data: state, mutate } = useSWR<T>(key, () => (
-    cache.get(key) ?? persist?.onGetData(key, isServer(window)) ?? initial
+  const { data: state, mutate, ...otherSWRResponse } = useSWR<T>(key, () => (
+    cache.get(key) ?? persist?.onGetData(key, isServer(window))
   ), {
-    fallbackData: initial,
+    fallbackData: cache.get(key) ?? initial,
     ...swrConfig
   });
 
@@ -81,18 +68,17 @@ export function useStore<T>(data: StoreParams<T>, swrConfig?: SWRConfiguration):
       : await (data as StateMutatorCallback)(state);
     persist?.onSetData(key, newState, isServer(window));
     mutate(newState);
-  }, [key, state, persist]);
+  }, [key, state, persist?.onSetData]);
 
-  return [state as T, setState] as const;
+  return [state as T, setState, otherSWRResponse] as const;
 }
 
 /**
  * Create custom hooks that wraps `useStore` to another function.
  * @param {StoreParams<T>} data state that to be shared or cached
- * @returns {StoreHooks<T>} state and setter
  * @see https://github.com/gadingnst/swr-global-state#best-practice for example best practice usage
  */
-export function createStore<T>(data: StoreParams<T>, swrConfig?: SWRConfiguration): StoreHooks<T> {
+export function createStore<T>(data: StoreParams<T>, swrConfig?: SWRConfiguration) {
   return () => useStore(data, swrConfig);
 }
 
