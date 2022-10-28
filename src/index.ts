@@ -20,11 +20,11 @@ export type StateMutator<T> = (data?: T|StateMutatorCallback<T>) => void;
  * @see https://github.com/gadingnst/swr-global-state#create-a-store-object
  */
 export interface StoreParams<T> {
-  key: Key;
+  key: Key|string;
   initial: T;
   persist?: {
-    onSetData: (key: Key, data: T, isServer?: boolean) => void|Promise<void>;
-    onGetData: (key: Key, isServer?: boolean) => T|Promise<T|undefined>;
+    onSetData: (key: Key|string, data: T, isServer?: boolean) => void|Promise<void>;
+    onGetData: (key: Key|string, isServer?: boolean) => T|Promise<T|undefined>;
   };
 }
 
