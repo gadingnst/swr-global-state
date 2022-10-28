@@ -62,10 +62,11 @@ export function useStore<T>(data: StoreParams<T>, swrConfig?: SWRConfiguration):
 
   const { cache } = useSWRConfig();
   const { data: state, mutate } = useSWR<T>(key, () => (
-    cache.get(key)
-      ?? persist?.onGetData(key, isServer(window))
-      ?? initial
-  ), swrConfig);
+    cache.get(key) ?? persist?.onGetData(key, isServer(window)) ?? initial
+  ), {
+    fallbackData: initial,
+    ...swrConfig
+  });
 
   /**
    * State setter, use this to set the global state like `setState` from `useState` hooks.
