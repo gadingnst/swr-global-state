@@ -52,6 +52,10 @@ export function useStore<T>(data: StoreParams<T>, swrConfig?: SWRConfiguration) 
     cache.get(key) ?? persist?.onGetData(key, isServer(window))
   ), {
     fallbackData: cache.get(key) ?? initial,
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
+    refreshWhenHidden: false,
+    refreshWhenOffline: false,
     ...swrConfig
   });
 
