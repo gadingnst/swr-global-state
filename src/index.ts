@@ -14,17 +14,31 @@ export type StateMutator<T> = (data?: T|StateMutatorCallback<T>) => void;
 
 /**
  * Type for params `useStore` hooks
- * @param key unique string that will become a key to get the cache data
- * @param initial starter value if there no cached state on client
- * @param persist object to handle custom cache, it consits `onSetData` and `onGetData` callback.
  * @see https://github.com/gadingnst/swr-global-state#create-a-store-object
  */
 export interface StoreParams<T> {
-  key: Key|string;
+  /** @param key is unique data type (or usually string) that will a key for the data  */
+  key: Key;
+  /** @param initial is starter value if there no cached state on client */
   initial: T;
-  persist?: {
-    onSetData: (key: Key|string, data: T, isServer?: boolean) => void|Promise<void>;
-    onGetData: (key: Key|string, isServer?: boolean) => T|Promise<T|undefined>;
+  /** @param persistor is object to handle custom cache, it consits `onSet` and `onGet` callback. */
+  persistor?: {
+    /**
+     * `onSet` means the callback that to be called when state has triggers changes.
+     * Exampe: use this to set the data to `localStorage` every state changes.
+     * @param {Key} key is data key
+     * @param {T} data is new data that has to changed
+     * @param {boolean} isServer is current environment is in `server` or not
+     */
+    onSet: (key: Key, data: T, isServer?: boolean) => void|Promise<void>;
+    /**
+     * `onGet` means the callback that to be called when initial renders.
+     * Example: use this to get the data from `localStorage`.
+     * @param {Key} key is data key
+     * @param {boolean} isServer is current environment is in `server` or not
+     * @returns {T|Promise<T|undefined>} data to be get on initial render
+     */
+    onGet: (key: Key, isServer?: boolean) => T|Promise<T|undefined>;
   };
 }
 
@@ -44,12 +58,12 @@ export function useStore<T>(data: StoreParams<T>, swrConfig?: SWRConfiguration) 
   const {
     key,
     initial,
-    persist
+    persistor
   } = data;
 
   const { cache } = useSWRConfig();
   const { data: state, mutate, ...otherSWRResponse } = useSWR<T>(key, () => (
-    cache.get(key) ?? persist?.onGetData(key, isServer(window))
+    cache.get(key) ?? persistor?.onGet(key, isServer(window))
   ), {
     fallbackData: cache.get(key) ?? initial,
     revalidateOnFocus: false,
@@ -66,13 +80,15 @@ export function useStore<T>(data: StoreParams<T>, swrConfig?: SWRConfiguration) 
    * @returns {StateMutator<T>} SWR Mutation
    * @see https://github.com/gadingnst/swr-global-state#using-store-on-your-component-1
    */
-  const setState: StateMutator<T> = useCallback(async(data?: T|StateMutatorCallback<T>) => {
-    const newState = typeof data !== 'function'
-      ? data
-      : await (data as StateMutatorCallback)(state);
-    persist?.onSetData(key, newState, isServer(window));
-    mutate(newState);
-  }, [key, state, persist?.onSetData]);
+  const setState: StateMutator<T> = useCallback((data?: T|StateMutatorCallback<T>) => {
+    mutate(async(prev) => {
+      const newState = typeof data !== 'function'
+        ? data
+        : await (data as StateMutatorCallback)(prev);
+      persistor?.onSet(key, newState, isServer(window));
+      return newState;
+    });
+  }, [key, persistor?.onSet]);
 
   return [state as T, setState, otherSWRResponse] as const;
 }
