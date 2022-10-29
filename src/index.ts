@@ -80,19 +80,22 @@ export function useStore<T>(data: StoreParams<T>, swrConfig?: SWRConfiguration) 
    * @see https://github.com/gadingnst/swr-global-state#using-store-on-your-component-1
    */
   const setState: StateMutator<T> = useCallback((data: T|StateMutatorCallback<T>) => {
-    mutate((prev) => {
+    mutate(() => {
+      const setPersist = (newState: T) => (
+        persistor?.onSet(key, newState as T, isServer(window))
+      );
       if (typeof data !== 'function') {
-        persistor?.onSet(key, data as T, isServer(window));
+        setPersist(data);
         return data;
       }
       const mutatorCallback = data as StateMutatorCallback;
-      return Promise.resolve(mutatorCallback(prev) as T)
+      return Promise.resolve(mutatorCallback(state) as T)
         .then((newData) => {
-          persistor?.onSet(key, newData, isServer(window));
+          setPersist(newData);
           return newData;
         });
     });
-  }, [key, persistor?.onSet]);
+  }, [key, state, persistor?.onSet]);
 
   return [state as T, setState, otherSWRResponse] as const;
 }
