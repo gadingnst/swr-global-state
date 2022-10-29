@@ -2,8 +2,11 @@ import type { SWRConfiguration } from 'swr/dist/types';
 import { useCallback } from 'react';
 import useSWR, { Key, useSWRConfig } from 'swr';
 
+/** Based on `Key` from swr*/
+export type StateKey = Key;
+
 /** Based on `MutatorCallback<Data = any>` from swr*/
-export type StateMutatorCallback<T = any> = (currentData: T) => T|Promise<T|undefined>;
+export type StateMutatorCallback<T = any> = (currentData: T) => T|Promise<T>;
 
 /** Based on `KeyedMutator<Data>` from swr */
 export type StateMutator<T> = (data: T|StateMutatorCallback<T>) => void;
@@ -13,19 +16,19 @@ export type StatePersistor<T> = {
   /**
    * `onSet` means the callback that to be called when state has triggers changes.
    * Exampe: use this to set the data to `localStorage` every state changes.
-   * @param {Key} key is data key
+   * @param {StateKey} key is data key
    * @param {T} data is new data that has to changed
    * @param {boolean} isServer is current environment is in `server` or not
    */
-  onSet: (key: Key, data: T, isServer?: boolean) => void|Promise<void>;
+  onSet: (key: StateKey, data: T, isServer?: boolean) => void|Promise<void>;
   /**
    * `onGet` means the callback that to be called when initial renders.
    * Example: use this to get the data from `localStorage`.
-   * @param {Key} key is data key
+   * @param {StateKey} key is data key
    * @param {boolean} isServer is current environment is in `server` or not
    * @returns {T|Promise<T|undefined>} data to be get on initial render
    */
-  onGet: (key: Key, isServer?: boolean) => T|Promise<T|undefined>;
+  onGet: (key: StateKey, isServer?: boolean) => T|Promise<T>;
 };
 
 /**
@@ -34,7 +37,7 @@ export type StatePersistor<T> = {
  */
 export interface StoreParams<T> {
   /** @param key is unique data type (or usually string) that will a key for the data  */
-  key: Key;
+  key: StateKey;
   /** @param initial is starter value if there no cached state on client */
   initial: T;
   /** @param persistor is object to handle custom cache, it consits `onSet` and `onGet` callback. */
@@ -88,8 +91,8 @@ export function useStore<T>(data: StoreParams<T>, swrConfig?: SWRConfiguration) 
         setPersist(data);
         return data;
       }
-      const mutatorCallback = data as StateMutatorCallback;
-      return Promise.resolve(mutatorCallback(state) as T)
+      const mutatorCallback = data as StateMutatorCallback<T>;
+      return Promise.resolve(mutatorCallback(state as T))
         .then((newData) => {
           setPersist(newData);
           return newData;
