@@ -20,7 +20,7 @@ Zero-setup & simple global state management for React Components based on [SWR](
       - [Creating Persisted State](#creating-persisted-state)
       - [Reusable Persistor (Example in TypeScript)](#reusable-persistor-example-in-typescript)
       - [Asynchronous Persistor](#asynchronous-persistor)
-    - [Best Practice with Persistor](#best-practice-with-persistor)
+      - [Best Practice with Persistor](#best-practice-with-persistor)
     - [Custom hooks](#custom-hooks)
 - [Demo](#demo)
 - [FAQ](#faq)
@@ -39,12 +39,10 @@ Zero-setup & simple global state management for React Components based on [SWR](
 ### NPM
 ```bash
 npm i swr-global-state
-# or npm i swr-global-state@2.0.0-beta
 ```
 ### Yarn
 ```bash
 yarn add swr-global-state
-# or yarn add swr-global-state@2.0.0-beta
 ```
 
 ## Usage
@@ -222,7 +220,7 @@ const useCounter = createStore({
 export default useCounter;
 ```
 
-### Best Practice with Persistor
+#### Best Practice with Persistor
 Best practice in using `persistor` is use [Debouncing Technique](https://www.google.com/search?q=debounce+technique+programming). This example is using `debouncing` in `onSet` callback. So, it will not spamming to call the callback request every state changes.
 ```js
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -244,7 +242,7 @@ const withDebounce = (fn, time) => {
 
 const useUser = createStore({
   key: "@app/user",
-  initial: {},
+  initial: null,
   persistor: {
     onSet: withDebounce(async(key, user) => {
       try {
@@ -295,6 +293,11 @@ function useAccount() {
       /**
        * set another SWR config here
        * @see https://swr.vercel.app/docs/options#options
+       * @default on `swr-global-state`:
+       * revalidateOnFocus: false
+       * revalidateOnReconnect: false
+       * refreshWhenHidden: false
+       * refreshWhenOffline: false
        */
       revalidateOnFocus: true,
       revalidateOnReconnect: true
@@ -344,7 +347,7 @@ export default useAccount;
 ```
 Then, use that custom hooks in your component as usual.
 ```jsx
-// file: components/App.js
+// file: App.js
 ...
 import useAccount from "stores/account";
 
