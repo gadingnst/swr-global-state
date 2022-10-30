@@ -2,16 +2,14 @@ import type { MutatorOptions, SWRConfiguration } from 'swr/dist/types';
 import { useCallback } from 'react';
 import useSWR, { Key, useSWRConfig } from 'swr';
 
-/** Based on `Key` from swr*/
 export type StateKey = Key;
-
-/** Based on `MutatorCallback<Data = any>` from swr*/
 export type StateMutatorCallback<T> = (currentData: T) => T|Promise<T>;
-
-/** Based on `KeyedMutator<Data>` from swr */
 export type StateMutator<T> = (data: T|StateMutatorCallback<T>, opts?: boolean | MutatorOptions<T>) => void;
 
-/** Object to handle custom cache, it consits `onSet` and `onGet` callback. */
+/**
+ * Object to handle custom cache, it consits `onSet` and `onGet` callback.
+ * @see https://github.com/gadingnst/swr-global-state#persisted-state
+ */
 export type StatePersistor<T = any> = {
   /**
    * `onSet` means the callback that to be called when state has triggers changes.
@@ -29,23 +27,16 @@ export type StatePersistor<T = any> = {
   onGet: (key: StateKey) => T|Promise<T>;
 };
 
-/**
- * Type for params `useStore` hooks
- * @see https://github.com/gadingnst/swr-global-state#create-a-store-object
- */
 export interface StoreParams<T> {
-  /** @param key is unique data type (or usually string) that will a key for the data  */
   key: StateKey;
-  /** @param initial is starter value if there no cached state on client */
   initial: T;
-  /** @param persistor is object to handle custom cache, it consits `onSet` and `onGet` callback. */
   persistor?: StatePersistor<T>;
 }
 
 /**
  * Using global state with SWR helpers
  * @param {StoreParams<T>} data state that to be shared or cached
- * @see https://github.com/gadingnst/swr-global-state#create-a-store-object for example usage
+ * @see https://github.com/gadingnst/swr-global-state#custom-hooks for example custom hooks usage
  */
 export function useStore<T, E = any>(data: StoreParams<T>, swrConfig?: SWRConfiguration) {
   const {
@@ -76,7 +67,7 @@ export function useStore<T, E = any>(data: StoreParams<T>, swrConfig?: SWRConfig
    * Can use callback function to get previous state and use it to set the state.
    * @param {T|StateMutatorCallback<T>}
    * @returns {StateMutator<T>} SWR Mutation
-   * @see https://github.com/gadingnst/swr-global-state#using-store-on-your-component-1
+   * @see https://github.com/gadingnst/swr-global-state#using-store-on-your-component
    */
   const setState: StateMutator<T> = useCallback((data: T|StateMutatorCallback<T>, opts?: boolean|MutatorOptions<T>) => mutate(() => {
     const setPersist = (newState: T) => persistor?.onSet(key, newState as T);
@@ -102,7 +93,7 @@ export function useStore<T, E = any>(data: StoreParams<T>, swrConfig?: SWRConfig
 /**
  * Create custom hooks that wraps `useStore` to another function.
  * @param {StoreParams<T>} data state that to be shared or cached
- * @see https://github.com/gadingnst/swr-global-state#best-practice for example best practice usage
+ * @see https://github.com/gadingnst/swr-global-state#creating-a-store
  */
 export function createStore<T, E = any>(data: StoreParams<T>, swrConfig?: SWRConfiguration) {
   return () => useStore<T, E>(data, swrConfig);
