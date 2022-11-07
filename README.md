@@ -3,6 +3,7 @@
 [![npm](https://img.shields.io/npm/v/swr-global-state.svg)](https://www.npmjs.com/package/swr-global-state)
 [![npm](https://img.shields.io/npm/dt/swr-global-state.svg)](https://npm-stat.com/charts.html?package=swr-global-state)
 [![GitHub issues](https://img.shields.io/github/issues/gadingnst/swr-global-state.svg)](https://github.com/gadingnst/swr-global-state/issues)
+[![Rate this package](https://badges.openbase.com/js/rating/swr-global-state.svg?token=zPIpBONkJ6OOQJcWjHNPStKx99B8TV6v9QKQ7ObwBlg=)](https://openbase.com/js/swr-global-state?utm_source=embedded&amp;utm_medium=badge&amp;utm_campaign=rate-badge)
 
 Zero-setup & simple global state management for React Components based on [SWR](https://swr.vercel.app) helpers. With this library, you can focus on your awesome React Project and not waste another afternoon on the setup & configuring your global state. 🌄
 
