@@ -53,15 +53,15 @@
   },
   "devDependencies": {
     "@size-limit/preset-small-lib": "^8.1.0",
-    "@types/react": "^18.0.21",
-    "@typescript-eslint/eslint-plugin": "^5.39.0",
-    "@typescript-eslint/parser": "^5.39.0",
-    "eslint": "^8.25.0",
-    "husky": "^8.0.1",
+    "@types/react": "^18.0.25",
+    "@typescript-eslint/eslint-plugin": "^5.45.0",
+    "@typescript-eslint/parser": "^5.45.0",
+    "eslint": "^8.28.0",
+    "husky": "^8.0.2",
     "size-limit": "^8.1.0",
     "tsdx": "^0.14.1",
-    "tslib": "^2.4.0",
-    "typescript": "^4.8.4"
+    "tslib": "^2.4.1",
+    "typescript": "^4.9.3"
   },
   "keywords": [
     "react",
