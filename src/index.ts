@@ -1,6 +1,6 @@
 import type { MutatorOptions, SWRConfiguration } from 'swr/dist/types';
 import { useCallback } from 'react';
-import useSWR, { Key, useSWRConfig } from 'swr';
+import useSWR, { type Key, useSWRConfig } from 'swr';
 
 export type StateKey = Key;
 export type StateMutatorCallback<T> = (currentData: T) => T|Promise<T>;
