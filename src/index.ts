@@ -4,7 +4,7 @@ import useSWR, { useSWRConfig } from 'swr';
 
 export type StateKey = Key;
 export type StateMutatorCallback<T> = (currentData: T) => T|Promise<T>;
-export type StateMutator<T> = (data: T|StateMutatorCallback<T>, opts?: boolean | MutatorOptions<T>) => void;
+export type StateMutator<T> = (data: T|StateMutatorCallback<T>, opts?: boolean|MutatorOptions<T>) => void;
 
 /**
  * Object to handle custom cache, it consits `onSet` and `onGet` callback.
