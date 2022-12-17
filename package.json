@@ -1,10 +1,27 @@
 {
   "name": "swr-global-state",
   "version": "2.1.0-preview",
-  "private": true,
+  "author": "Sutan Gading Fadhillah Nasution <contact@gading.dev>",
+  "description": "Zero-setup & simple global state management for React Components",
+  "license": "MIT",
+  "private": false,
   "workspaces": [
     "apps/*",
     "packages/*"
+  ],
+  "main": "packages/swr-global-state/dist/index.js",
+  "typings": "packages/swr-global-state/dist/index.d.ts",
+  "module": "packages/swr-global-state/dist/swr-global-state.esm.js",
+  "homepage": "https://github.com/gadingnst/swr-global-state",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gadingnst/swr-global-state.git"
+  },
+  "bugs": {
+    "url": "https://github.com/gadingnst/swr-global-state/issues"
+  },
+  "files": [
+    "packages/swr-global-state/dist"
   ],
   "scripts": {
     "build": "turbo run build",
@@ -14,6 +31,10 @@
     "test:coverage": "turbo run test:coverage",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
+  "peerDependencies": {
+    "react": ">=17",
+    "swr": ">=2"
+  },
   "devDependencies": {
     "eslint-config-custom": "*",
     "prettier": "latest",
@@ -22,5 +43,33 @@
   "engines": {
     "node": ">=14.0.0"
   },
-  "packageManager": "npm@8.19.2"
+  "packageManager": "npm@8.19.2",
+  "keywords": [
+    "react",
+    "swr",
+    "hooks",
+    "javascript",
+    "typescript",
+    "global",
+    "state",
+    "cache",
+    "store",
+    "global-state",
+    "remote-state",
+    "global-state-management",
+    "react-state-management",
+    "state-management",
+    "state-manager",
+    "global-state-hooks",
+    "state-hooks",
+    "swr-state",
+    "swr-store",
+    "use-swr",
+    "use-store",
+    "client-state",
+    "react-utility",
+    "hooks-utility",
+    "redux-alternative",
+    "context-alternative"
+  ]
 }
