@@ -387,9 +387,7 @@ export default App;
 ```
 
 # Demo
-You can see:
-- live demo [here](https://swr-global-state-demo.gading.dev/)
-- demo repository [here](https://github.com/gadingnst/swr-global-state-demo)
+You can see live demo [here](https://swr-global-state-demo.gading.dev/)
 
 # FAQ
 ## Why should I use this?
