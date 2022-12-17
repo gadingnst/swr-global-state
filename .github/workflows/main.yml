@@ -68,8 +68,8 @@ jobs:
         with:
           package-manager: npm
           skip-step: all
-          coverage-file: report.json
-          base-coverage-file: report.json
+          coverage-file: packages/swr-global-state/report.json
+          base-coverage-file: packages/swr-global-state/report.json
 
   build:
     name: Build
@@ -92,11 +92,21 @@ jobs:
   size:
     name: Build & Generate Size report
     if: github.event_name == 'pull_request'
+    needs: install
     runs-on: ubuntu-latest
     env:
       CI_JOB_NUMBER: 1
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Load node_modules
+        uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: node_modules-${{ github.event.pull_request.head.sha }}
       - uses: andresz1/size-limit-action@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
+          skip_step: install
+          directory: packages/swr-global-state
