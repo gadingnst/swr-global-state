@@ -24,6 +24,9 @@ jobs:
           key: node_modules-${{ github.event.pull_request.head.sha }}
           restore-keys: |
             node_modules-
+      - name: Checkout to package swr-global-state
+        run: |
+          cd packages/swr-global-state
       - name: Install Dependency Package
         run: |
           npm install
@@ -42,6 +45,9 @@ jobs:
         with:
           path: node_modules
           key: node_modules-${{ github.event.pull_request.head.sha }}
+      - name: Checkout to package swr-global-state
+        run: |
+          cd packages/swr-global-state
       - name: Start Linting
         run: |
           npm run lint
@@ -60,6 +66,9 @@ jobs:
         with:
           path: node_modules
           key: node_modules-${{ github.event.pull_request.head.sha }}
+      - name: Checkout to package swr-global-state
+        run: |
+          cd packages/swr-global-state
       - name: Start Unit Testing
         run: |
           npm run test:coverage
@@ -85,6 +94,9 @@ jobs:
         with:
           path: node_modules
           key: node_modules-${{ github.event.pull_request.head.sha }}
+      - name: Checkout to package swr-global-state
+        run: |
+          cd packages/swr-global-state
       - name: Start Building
         run: |
           npm run build
@@ -97,6 +109,9 @@ jobs:
       CI_JOB_NUMBER: 1
     steps:
       - uses: actions/checkout@v1
+      - name: Checkout to package swr-global-state
+        run: |
+          cd packages/swr-global-state
       - uses: andresz1/size-limit-action@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}

@@ -1,4 +1,4 @@
-import type { MutatorOptions, SWRConfiguration, Key } from 'swr/dist/types';
+import type { Key, MutatorOptions, SWRConfiguration, SWRResponse } from 'swr/_internal/dist/index';
 import { useCallback } from 'react';
 import useSWR, { useSWRConfig } from 'swr';
 
@@ -46,10 +46,10 @@ export function useStore<T, E = any>(data: StoreParams<T>, swrConfig?: SWRConfig
   } = data;
 
   const { cache } = useSWRConfig();
-  const swrResponse = useSWR<T, E>(
+  const swrResponse = useSWR(
     key,
     () => Promise.resolve(persistor?.onGet(key) as T)
-      .then(resolvedData => resolvedData ?? cache.get(key) ?? initial),
+      .then(resolvedData => resolvedData ?? cache.get(key)?.data ?? initial),
     {
       fallbackData: initial,
       revalidateOnFocus: false,
@@ -81,12 +81,13 @@ export function useStore<T, E = any>(data: StoreParams<T>, swrConfig?: SWRConfig
         setPersist(newData);
         return newData;
       });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, opts), [key, state, persistor?.onSet]);
 
   return [
     state as T,
     setState,
-    swrResponse
+    swrResponse as SWRResponse<T, E>
   ] as const;
 }
 

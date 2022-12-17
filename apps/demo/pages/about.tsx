@@ -1,0 +1,60 @@
+/* eslint-disable @next/next/no-img-element */
+
+import Link from 'next/link';
+import useCount from '../states/stores/count';
+import useCountPersisted from '../states/stores/count-persisted';
+import useCountAsync from '../states/stores/count-async';
+import useData from '../states/stores/data';
+
+const About = () => {
+  const [count] = useCount();
+  const [countPersist] = useCountPersisted();
+  const [countAsync] = useCountAsync();
+  const { data, login, logout, error } = useData();
+
+  const renderData = () => {
+    let msg = 'Loading...';
+    if (error) {
+      msg = 'You must login before see the data';
+    } else if (data) {
+      msg = `By: ${data?.maintaner || '-'}`;
+    }
+    return (
+      <p style={{ fontSize: 14 }}>
+        {msg}
+      </p>
+    );
+  };
+
+  return (
+    <div className="App">
+      <header className="App-header">
+        <img src="/logo.svg" className="App-logo" alt="logo" />
+        <p style={{ color: 'aquamarine' }}>
+          This is About Page.
+        </p>
+        {renderData()}
+        <div style={{ display: 'flex' }}>
+          <button onClick={login} style={{ marginRight: 10 }}>
+            Login
+          </button>
+          <button onClick={logout}>
+            Destroy Data
+          </button>
+        </div>
+        <p>
+          Count from Home: {count}
+          <br />
+          Count from Home (Persisted): {countPersist}
+          <br />
+          Count from Home (Async): {countAsync}
+        </p>
+        <Link className="App-link" href="/">
+          Go To Home
+        </Link>
+      </header>
+    </div>
+  );
+};
+
+export default About;

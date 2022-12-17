@@ -1,4 +1,4 @@
-import { createStore } from '../src';
+import { createStore } from './index';
 
 const useCounter = createStore({
   initial: 0,
