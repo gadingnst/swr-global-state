@@ -2,7 +2,7 @@ function GitHubBadge() {
   return (
     <div>
       <a
-        href="https://github.com/gadingnst/swr-global-state-demo"
+        href="https://github.com/gadingnst/swr-global-state"
         className="github-corner"
         aria-label="View source on GitHub"
       >
