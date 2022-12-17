@@ -2,12 +2,12 @@
   "name": "swr-global-state",
   "author": "Sutan Gading Fadhillah Nasution <contact@gading.dev>",
   "description": "Zero-setup & simple global state management for React Components",
-  "version": "2.1.0-preview",
+  "version": "2.1.0",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "module": "dist/swr-global-state.esm.js",
-  "homepage": "https://github.com/gadingnst/swr-global-state",
+  "homepage": "https://swr-global-state-demo.gading.dev",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/gadingnst/swr-global-state.git"
