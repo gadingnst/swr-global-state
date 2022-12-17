@@ -1,6 +1,6 @@
 {
   "name": "swr-global-state",
-  "version": "2.1.0",
+  "version": "2.1.0-preview",
   "private": true,
   "workspaces": [
     "apps/*",
