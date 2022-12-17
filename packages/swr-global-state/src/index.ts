@@ -97,7 +97,10 @@ export function useStore<T, E = any>(data: StoreParams<T>, swrConfig?: SWRConfig
  * @see https://github.com/gadingnst/swr-global-state#creating-a-store
  */
 export function createStore<T, E = any>(data: StoreParams<T>, swrConfig?: SWRConfiguration) {
-  return () => useStore<T, E>(data, swrConfig);
+  return (initial?: T) => useStore<T, E>({
+    ...data,
+    initial: initial || data.initial
+  }, swrConfig);
 }
 
 export default useStore;
