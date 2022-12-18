@@ -39,11 +39,11 @@ Zero-setup & simple global state management for React Components based on [SWR](
 ## Install
 ### NPM
 ```bash
-npm i swr-global-state
+npm i swr swr-global-state
 ```
 ### Yarn
 ```bash
-yarn add swr-global-state
+yarn add swr swr-global-state
 ```
 
 ## Usage
