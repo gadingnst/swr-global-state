@@ -5,7 +5,7 @@ import localStoragePersistor from '../persistors/local-storage';
  * @see https://github.com/gadingnst/swr-global-state#custom-hooks
  */
 const useCountPersist = createStore<number>({
-  key: '@app/count-persisted', // (Required) state key
+  key: '@app/count-persisted', // (Required) state key with unique string
   initial: 0, // <- (Required) initial state
   persistor: localStoragePersistor
 });
