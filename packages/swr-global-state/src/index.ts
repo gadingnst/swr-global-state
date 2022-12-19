@@ -99,7 +99,7 @@ export function useStore<T, E = any>(data: StoreParams<T>, swrConfig?: SWRConfig
 export function createStore<T, E = any>(data: StoreParams<T>, swrConfig?: SWRConfiguration) {
   return (initial?: T) => useStore<T, E>({
     ...data,
-    initial: initial || data.initial
+    initial: initial ?? data.initial
   }, swrConfig);
 }
 
