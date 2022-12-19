@@ -10,6 +10,10 @@ const KEY = '@app/data';
 const DUMMY_TOKEN_KEY = '@app/token';
 
 function useData() {
+  const [isLoading, setLoading] = useStore({
+    key: `${KEY}-loading`,
+    initial: true
+  });
   const [data, , swrDefaultResponse] = useStore(
     {
       key: KEY,
@@ -36,6 +40,8 @@ function useData() {
             }
             const cachedData = localStoragePersistor.onGet(key);
             return cachedData;
+          } finally {
+            setLoading(false);
           }
         }
       }
@@ -49,18 +55,22 @@ function useData() {
   const { mutate, error } = swrDefaultResponse;
 
   const login = async() => {
+    setLoading(true);
     window.localStorage.setItem(DUMMY_TOKEN_KEY, 'token_login');
     await sleep(750);
     mutate();
+    setLoading(false);
   };
 
   const logout = async() => {
+    setLoading(true);
     window.localStorage.removeItem(KEY);
     window.localStorage.removeItem(DUMMY_TOKEN_KEY);
     // simulate async request
     await sleep();
     // fetching logout
     mutate(null);
+    setLoading(false);
   };
 
   // your very custom mutator/dispatcher
@@ -69,7 +79,8 @@ function useData() {
     data,
     error,
     login,
-    logout
+    logout,
+    isLoading
   };
 }
 

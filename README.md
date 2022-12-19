@@ -55,7 +55,7 @@ Create a new file for your global state on your root directory. And then, use `c
 import { createStore } from "swr-global-state";
 
 const useCounter = createStore({
-  key: "@app/counter", // (Required) state key
+  key: "@app/counter", // (Required) state key with unique string
   initial: 0 // <- (Required) initial state
 });
 
@@ -272,6 +272,10 @@ import useStore from "swr-global-state";
 const KEY = "@app/account";
 
 function useAccount() {
+  const [loading, setLoading] = useStore({
+    key: `${KEY}-loading`,
+    initial: true
+  });
   const [account, setAccount, swrDefaultResponse] = useStore(
     {
       key: KEY,
@@ -286,6 +290,7 @@ function useAccount() {
             return remoteAccount.json();
           }
           const cachedAccount = window.localStorage.getItem(String(key));
+          setLoading(false);
           return JSON.parse(cachedAccount);
         }
       }
@@ -311,26 +316,24 @@ function useAccount() {
    */
   const { mutate, error } = swrDefaultResponse;
 
-  /**
-   * create custom loading state
-   * @see https://swr.vercel.app/docs/getting-started#make-it-reusable
-   */
-  const loading = !account && !error;
-
   const destroyAccount = async () => {
+    setLoading(true);
     await fetch('/api/account/logout');
     window.localStorage.removeItem(KEY);
     // use default `mutate` from SWR to avoid `onSet` callback in `persistor`
     mutate(null);
+    setLoading(false);
   };
 
   const updateAccount = async (newAccountData) => {
+    setLoading(true);
     await fetch('/api/account', {
       method: 'POST',
       body: JSON.stringify(newAccountData)
       ...
     })
     setAccount(newAccountData);
+    setLoading(false);
   };
 
   // your very custom mutator/dispatcher

@@ -3,18 +3,18 @@
 import Link from 'next/link';
 import useCount from '../states/stores/count';
 import useCountPersisted from '../states/stores/count-persisted';
-import useCountAsync from '../states/stores/count-async';
 import useData from '../states/stores/data';
 
 const About = () => {
   const [count] = useCount();
   const [countPersist] = useCountPersisted();
-  const [countAsync] = useCountAsync();
-  const { data, login, logout, error } = useData();
+  const { data, login, logout, error, isLoading } = useData();
 
   const renderData = () => {
-    let msg = 'Loading...';
-    if (error) {
+    let msg = '';
+    if (isLoading) {
+      msg = 'Loading...';
+    } else if (error) {
       msg = 'You must login before see the data';
     } else if (data) {
       msg = `By: ${data?.maintaner || '-'}`;
@@ -46,8 +46,6 @@ const About = () => {
           Count from Home: {count}
           <br />
           Count from Home (Persisted): {countPersist}
-          <br />
-          Count from Home (Async): {countAsync}
         </p>
         <Link className="App-link" href="/">
           Go To Home
