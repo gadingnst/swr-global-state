@@ -3,7 +3,7 @@ version: 2
 updates:
 # Fetch and update latest `npm` packages
 - package-ecosystem: npm
-  directory: '/packages/swr-global-state'
+  directory: '/'
   target-branch: 'main'
   schedule:
     interval: monthly
