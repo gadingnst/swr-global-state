@@ -1,5 +1,4 @@
 import type { Key, MutatorOptions, SWRConfiguration, SWRResponse } from 'swr/_internal/dist/index';
-import { useCallback } from 'react';
 import useSWR, { useSWRConfig } from 'swr';
 
 export type StateKey = Key;
@@ -66,10 +65,9 @@ export function useStore<T, E = any>(data: StoreParams<T>, swrConfig?: SWRConfig
    * State setter, use this to set the global state like `setState` from `useState` hooks.
    * Can use callback function to get previous state and use it to set the state.
    * @param {T|StateMutatorCallback<T>}
-   * @returns {StateMutator<T>} SWR Mutation
    * @see https://github.com/gadingnst/swr-global-state#using-store-on-your-component
    */
-  const setState: StateMutator<T> = useCallback((data: T|StateMutatorCallback<T>, opts?: boolean|MutatorOptions<T>) => mutate(() => {
+  const setState: StateMutator<T> = (data: T|StateMutatorCallback<T>, opts?: boolean|MutatorOptions<T>) => mutate(() => {
     const setPersist = (newState: T) => persistor?.onSet(key, newState as T);
     if (typeof data !== 'function') {
       setPersist(data);
@@ -82,7 +80,7 @@ export function useStore<T, E = any>(data: StoreParams<T>, swrConfig?: SWRConfig
         return newData;
       });
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, opts), [key, state, persistor?.onSet]);
+  }, opts);
 
   return [
     state as T,
