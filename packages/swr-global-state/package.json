@@ -2,7 +2,7 @@
   "name": "swr-global-state",
   "author": "Sutan Gading Fadhillah Nasution <contact@gading.dev>",
   "description": "Zero-setup & simple global state management for React Components",
-  "version": "2.1.1",
+  "version": "2.2.0",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -46,15 +46,12 @@
     "swr": ">=2"
   },
   "devDependencies": {
-    "@size-limit/preset-small-lib": "^8.1.0",
-    "@types/react": "^18.0.25",
-    "@typescript-eslint/eslint-plugin": "^5.45.0",
-    "@typescript-eslint/parser": "^5.45.0",
-    "eslint": "^8.28.0",
-    "size-limit": "^8.1.0",
+    "@size-limit/preset-small-lib": "^8.2.6",
+    "eslint-config-custom": "*",
+    "size-limit": "^8.2.6",
     "tsdx": "^0.14.1",
-    "tslib": "^2.4.1",
-    "typescript": "^4.9.3"
+    "tslib": "^2.6.1",
+    "typescript": "^5.1.6"
   },
   "keywords": [
     "react",
