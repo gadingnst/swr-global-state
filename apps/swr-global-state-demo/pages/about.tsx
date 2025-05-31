@@ -47,9 +47,14 @@ const About = () => {
           <br />
           Count from Home (Persisted): {countPersist}
         </p>
-        <Link className="App-link" href="/">
-          Go To Home
-        </Link>
+        <div style={{ display: 'flex', gap: '20px', marginTop: '20px' }}>
+          <Link className="App-link" href="/">
+            Go To Home
+          </Link>
+          <Link className="App-link" href="/async-demo">
+            Try Async Storage Demo
+          </Link>
+        </div>
       </header>
     </div>
   );

@@ -1,8 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
 
 import Link from 'next/link';
-import GetCount from '../components/GetCount';
 import SetCount from '../components/SetCount';
+import GetCount from '../components/GetCount';
 
 const Home = () => {
   return (
@@ -21,9 +21,14 @@ const Home = () => {
         <SetCount />
         <br />
         <GetCount />
-        <Link className="App-link" href="/about">
-          Go To About
-        </Link>
+        <div style={{ display: 'flex', gap: '20px', marginTop: '20px' }}>
+          <Link className="App-link" href="/about">
+            Go To About
+          </Link>
+          <Link className="App-link" href="/async-demo">
+            Try Async Storage Demo
+          </Link>
+        </div>
       </header>
     </div>
   );
