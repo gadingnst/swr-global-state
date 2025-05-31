@@ -22,10 +22,11 @@
     "node": ">=10"
   },
   "scripts": {
-    "start": "tsdx watch",
-    "build": "tsdx build",
-    "test": "tsdx test",
-    "test:coverage": "tsdx test --ci --json --coverage --testLocationInResults --outputFile=report.json",
+    "start": "vite build --watch",
+    "build": "vite build && tsc --emitDeclarationOnly --outDir dist",
+    "test": "vitest",
+    "test:coverage": "vitest --coverage",
+    "test:ui": "vitest --ui",
     "lint": "tsc --noEmit && eslint src --max-warnings 0",
     "lint:fix": "tsc --noEmit && eslint src --fix",
     "size": "size-limit",
@@ -47,11 +48,17 @@
   },
   "devDependencies": {
     "@size-limit/preset-small-lib": "^8.2.6",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^15.0.7",
+    "@types/node": "^22.15.29",
+    "@vitejs/plugin-react": "^4.5.0",
     "eslint-config-custom": "*",
+    "jsdom": "^26.1.0",
     "size-limit": "^8.2.6",
-    "tsdx": "^0.14.1",
     "tslib": "^2.6.1",
-    "typescript": "^5.1.6"
+    "typescript": "^5.8.3",
+    "vite": "^6.3.5",
+    "vitest": "^3.1.4"
   },
   "keywords": [
     "react",

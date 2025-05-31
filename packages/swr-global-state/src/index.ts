@@ -125,7 +125,18 @@ function createRateLimitedFunction<T>(
  * @param {StoreParams<T>} data state that to be shared or cached
  * @see https://github.com/gadingnst/swr-global-state#custom-hooks for example custom hooks usage
  */
-export function useStore<T, E = any>(data: StoreParams<T>, swrConfig?: SWRConfiguration) {
+export function useStore<T, E = any>(
+  data: StoreParams<T>,
+  swrConfig?: SWRConfiguration
+): readonly [
+  T,
+  StateMutator<T>,
+  SWRResponse<T, E> & {
+    isLoading: boolean;
+    error: E;
+    isPersisting: boolean;
+  }
+] {
   const {
     key,
     initial,
