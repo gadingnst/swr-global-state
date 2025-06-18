@@ -1,5 +1,5 @@
 /* eslint-disable no-throw-literal */
-import useStore from 'swr-global-state';
+import { useStore } from 'swr-global-state';
 import localStoragePersistor from '../persistors/local-storage';
 
 const sleep = (delay = 500) => new Promise((resolve) => {

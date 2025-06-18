@@ -46,12 +46,13 @@ jobs:
         run: |
           npm run test:coverage
       - name: Generate Coverage Report
-        uses: ArtiomTr/jest-coverage-report-action@v2
+        uses: davelosert/vitest-coverage-report-action@v2
+        if: always()
         with:
-          package-manager: npm
-          skip-step: all
-          coverage-file: packages/swr-global-state/report.json
-          base-coverage-file: packages/swr-global-state/report.json
+          json-summary-path: './packages/swr-global-state/coverage/coverage-summary.json'
+          json-final-path: './packages/swr-global-state/coverage/coverage-final.json'
+          vite-config-path: './packages/swr-global-state/vitest.config.ts'
+          working-directory: './packages/swr-global-state'
 
   build:
     name: Build

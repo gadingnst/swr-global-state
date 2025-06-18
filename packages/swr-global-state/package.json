@@ -2,7 +2,7 @@
   "name": "swr-global-state",
   "author": "Sutan Gading Fadhillah Nasution <contact@gading.dev>",
   "description": "Zero-setup & simple global state management for React Components",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -19,21 +19,22 @@
     "dist"
   ],
   "engines": {
-    "node": ">=10"
+    "node": ">=18"
   },
   "scripts": {
-    "start": "tsdx watch",
-    "build": "tsdx build",
-    "test": "tsdx test",
-    "test:coverage": "tsdx test --ci --json --coverage --testLocationInResults --outputFile=report.json",
+    "start": "vite build --watch",
+    "build": "vite build && tsc --emitDeclarationOnly --outDir dist",
     "lint": "tsc --noEmit && eslint src --max-warnings 0",
     "lint:fix": "tsc --noEmit && eslint src --fix",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
     "size": "size-limit",
     "analyze": "size-limit --why"
   },
   "size-limit": [
     {
-      "path": "dist/swr-global-state.cjs.production.min.js",
+      "path": "dist/index.js",
       "limit": "10 KB"
     },
     {
@@ -47,11 +48,21 @@
   },
   "devDependencies": {
     "@size-limit/preset-small-lib": "^8.2.6",
+    "@testing-library/jest-dom": "^6.1.4",
+    "@testing-library/react": "^14.1.2",
+    "@testing-library/user-event": "^14.5.1",
+    "@types/node": "^22.15.29",
+    "@vitejs/plugin-react": "^4.5.0",
+    "@vitest/coverage-v8": "^2.1.8",
     "eslint-config-custom": "*",
+    "jsdom": "^23.0.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "size-limit": "^8.2.6",
-    "tsdx": "^0.14.1",
-    "tslib": "^2.6.1",
-    "typescript": "^5.1.6"
+    "swr": "^2.2.4",
+    "typescript": "^5.8.3",
+    "vite": "^6.3.5",
+    "vitest": "^2.1.8"
   },
   "keywords": [
     "react",

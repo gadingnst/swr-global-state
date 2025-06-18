@@ -12,10 +12,16 @@
       "cache": false
     },
     "test": {
-      "outputs": []
+      "outputs": ["coverage/**"],
+      "dependsOn": []
+    },
+    "test:watch": {
+      "cache": false,
+      "persistent": true
     },
     "test:coverage": {
-      "cache": false
+      "outputs": ["coverage/**"],
+      "dependsOn": []
     }
   }
 }
