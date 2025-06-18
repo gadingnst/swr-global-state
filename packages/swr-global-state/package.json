@@ -26,6 +26,9 @@
     "build": "vite build && tsc --emitDeclarationOnly --outDir dist",
     "lint": "tsc --noEmit && eslint src --max-warnings 0",
     "lint:fix": "tsc --noEmit && eslint src --fix",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
     "size": "size-limit",
     "analyze": "size-limit --why"
   },
@@ -45,12 +48,21 @@
   },
   "devDependencies": {
     "@size-limit/preset-small-lib": "^8.2.6",
+    "@testing-library/jest-dom": "^6.1.4",
+    "@testing-library/react": "^14.1.2",
+    "@testing-library/user-event": "^14.5.1",
     "@types/node": "^22.15.29",
     "@vitejs/plugin-react": "^4.5.0",
+    "@vitest/coverage-v8": "^1.0.4",
     "eslint-config-custom": "*",
+    "jsdom": "^23.0.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "size-limit": "^8.2.6",
+    "swr": "^2.2.4",
     "typescript": "^5.8.3",
-    "vite": "^6.3.5"
+    "vite": "^6.3.5",
+    "vitest": "^1.0.4"
   },
   "keywords": [
     "react",

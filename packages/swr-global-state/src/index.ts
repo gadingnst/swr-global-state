@@ -146,6 +146,8 @@ export function useStore<T, E = any>(
     rateLimit
   } = data;
 
+  const cacheKey = key?.toString() || '';
+
   const { cache } = useSWRConfig();
   const rateLimitedPersistRef = useRef<((key: StateKey, data: T) => void) | null>(null);
   const [isPersisting, setIsPersisting] = useState(false);
@@ -186,7 +188,7 @@ export function useStore<T, E = any>(
     async() => {
       try {
         // Prioritize current cache data over persisted data
-        const currentCacheData = cache.get(key)?.data;
+        const currentCacheData = cache.get(cacheKey)?.data;
 
         if (persistor?.onGet) {
           // Only use persisted data if no current cache data exists
@@ -203,7 +205,7 @@ export function useStore<T, E = any>(
         if (retryOnError) {
           throw error;
         }
-        return cache.get(key)?.data ?? initial;
+        return cache.get(cacheKey)?.data ?? initial;
       }
     },
     {
@@ -221,7 +223,7 @@ export function useStore<T, E = any>(
   const setState: StateMutator<T> = async(data: T|StateMutatorCallback<T>, opts?: boolean|MutatorOptions<T>) => {
     return mutate(async(currentData: T | undefined) => {
       // Use currentData from mutate, but if undefined, get fresh data from cache
-      const actualCurrentData = currentData ?? cache.get(key)?.data ?? state;
+      const actualCurrentData = currentData ?? cache.get(cacheKey)?.data ?? state;
 
       const setPersist = async(newState: T) => {
         if (persistor?.onSet) {
