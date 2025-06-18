@@ -3,9 +3,6 @@ import { render, RenderOptions, RenderResult } from '@testing-library/react';
 import { ReactElement } from 'react';
 import { SWRConfig } from 'swr';
 
-/**
- * Custom render function that wraps components with SWRConfig for testing
- */
 export function customRender(
   ui: ReactElement,
   options?: Omit<RenderOptions, 'wrapper'>
