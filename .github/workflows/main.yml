@@ -10,23 +10,17 @@ jobs:
     name: Install Dependency
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Use Node.js 18.x
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v4
         with:
           node-version: 18.x
-      - name: Cache node modules
-        uses: actions/cache@v1
-        with:
-          path: node_modules
-          key: node_modules-${{ github.event.pull_request.head.sha }}
-          restore-keys: |
-            node_modules-
-      - name: Install Dependency Package
+          cache: 'npm'
+      - name: Install Dependencies
         run: |
-          npm install
+          npm ci
 
   test:
     name: Unit Test
@@ -34,14 +28,17 @@ jobs:
     needs: install
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
-      - name: Load node_modules
-        uses: actions/cache@v1
+      - name: Use Node.js 18.x
+        uses: actions/setup-node@v4
         with:
-          path: node_modules
-          key: node_modules-${{ github.event.pull_request.head.sha }}
+          node-version: 18.x
+          cache: 'npm'
+      - name: Install Dependencies
+        run: |
+          npm ci
       - name: Start Unit Testing
         run: |
           npm run test:coverage
@@ -52,7 +49,6 @@ jobs:
           json-summary-path: './packages/swr-global-state/coverage/coverage-summary.json'
           json-final-path: './packages/swr-global-state/coverage/coverage-final.json'
           vite-config-path: './packages/swr-global-state/vitest.config.ts'
-          working-directory: './packages/swr-global-state'
 
   build:
     name: Build
@@ -60,14 +56,17 @@ jobs:
     needs: install
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
-      - name: Load node_modules
-        uses: actions/cache@v1
+      - name: Use Node.js 18.x
+        uses: actions/setup-node@v4
         with:
-          path: node_modules
-          key: node_modules-${{ github.event.pull_request.head.sha }}
+          node-version: 18.x
+          cache: 'npm'
+      - name: Install Dependencies
+        run: |
+          npm ci
       - name: Start Building
         run: |
           npm run build
@@ -80,14 +79,17 @@ jobs:
     env:
       CI_JOB_NUMBER: 1
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
-      - name: Load node_modules
-        uses: actions/cache@v1
+      - name: Use Node.js 18.x
+        uses: actions/setup-node@v4
         with:
-          path: node_modules
-          key: node_modules-${{ github.event.pull_request.head.sha }}
+          node-version: 18.x
+          cache: 'npm'
+      - name: Install Dependencies
+        run: |
+          npm ci
       - uses: andresz1/size-limit-action@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
