@@ -22,6 +22,13 @@ Zero-setup & simple global state management for React Components based on [SWR](
       - [Reusable Persistor (Example in TypeScript)](#reusable-persistor-example-in-typescript)
       - [Asynchronous Persistor](#asynchronous-persistor)
       - [Best Practice with Persistor](#best-practice-with-persistor)
+    - [Rate Limiting](#rate-limiting)
+      - [Debounce Rate Limiting](#debounce-rate-limiting)
+      - [Throttle Rate Limiting](#throttle-rate-limiting)
+      - [Custom Rate Limiting](#custom-rate-limiting)
+    - [Async State Management](#async-state-management)
+      - [Async Counter with Loading States](#async-counter-with-loading-states)
+      - [Async Profile Management](#async-profile-management)
     - [Custom hooks](#custom-hooks)
 - [Demo](#demo)
 - [FAQ](#faq)
@@ -261,6 +268,322 @@ const useUser = createStore({
 export default useUser;
 ```
 
+### Rate Limiting
+Rate limiting helps optimize performance by controlling how frequently state updates are persisted. This is especially useful for rapid user interactions or frequent state changes.
+
+#### Debounce Rate Limiting
+Debounce delays the execution until after a specified time has passed since the last call. Perfect for scenarios like search inputs or rapid counter increments.
+
+```ts
+// file: stores/async-counter.ts
+
+import { createStore } from 'swr-global-state';
+import asyncStoragePersistor from '../persistors/async-storage';
+
+/**
+ * Counter store with async storage persistence and debounce rate limiting
+ * Demonstrates async operations with loading states and optimized persistence
+ */
+const useAsyncCounter = createStore<number>({
+  key: '@app/async-counter',
+  initial: 0,
+  persistor: asyncStoragePersistor,
+  rateLimit: {
+    type: 'debounce',
+    delay: 2000 // Wait 2 seconds after last change before persisting
+  }
+});
+
+export default useAsyncCounter;
+```
+
+#### Throttle Rate Limiting
+Throttle ensures that the function is called at most once per specified interval. Ideal for preventing excessive API calls during rapid typing.
+
+```ts
+// file: stores/search-history.ts
+
+import { createStore } from 'swr-global-state';
+import localStoragePersistor from '../persistors/local-storage';
+
+interface SearchHistory {
+  queries: string[];
+  lastSearch: string;
+  searchCount: number;
+}
+
+const defaultSearchHistory: SearchHistory = {
+  queries: [],
+  lastSearch: '',
+  searchCount: 0
+};
+
+/**
+ * Search history store with throttle rate limiting
+ * Prevents excessive API calls during rapid typing
+ */
+const useSearchHistory = createStore<SearchHistory>({
+  key: '@app/search-history',
+  initial: defaultSearchHistory,
+  persistor: localStoragePersistor,
+  rateLimit: {
+    type: 'throttle',
+    delay: 1000 // Allow persistence at most once per second
+  }
+});
+
+export default useSearchHistory;
+```
+
+#### Custom Rate Limiting
+For advanced use cases, you can implement custom rate limiting logic that combines multiple strategies.
+
+```ts
+// file: stores/count-persisted.ts
+
+import { createStore } from 'swr-global-state';
+import localStoragePersistor from '../persistors/local-storage';
+
+/**
+ * Custom rate limiting function that combines debounce and throttle
+ * Provides immediate feedback but limits actual persistence calls
+ */
+const customCounterRateLimit = <T>(func: (key: any, data: T) => Promise<void>, delay: number) => {
+  let lastCall = 0;
+  let timeoutId: NodeJS.Timeout;
+
+  return (key: any, data: T) => {
+    const now = Date.now();
+
+    // Throttle: if too fast, skip
+    if (now - lastCall < delay / 3) {
+      return;
+    }
+
+    // Debounce: delay execution for batch updates
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => {
+      lastCall = Date.now();
+      func(key, data);
+    }, delay);
+  };
+};
+
+const usePersistedCounter = createStore<number>({
+  key: '@app/persisted-counter',
+  initial: 0,
+  persistor: {
+    onSet: customCounterRateLimit(localStoragePersistor.onSet, 1500),
+    onGet: localStoragePersistor.onGet
+  }
+});
+
+export default usePersistedCounter;
+```
+
+### Async State Management
+#### Async Counter with Loading States
+Demonstrates how to handle async operations with loading states and error handling.
+
+```tsx
+// file: components/AsyncCounter.tsx
+
+import { useState } from 'react';
+import useAsyncCounter from '../stores/async-counter';
+
+export default function AsyncCounter() {
+  const [counter, setCounter, { isLoading, error, isPersisting }] = useAsyncCounter();
+  const [isUpdating, setIsUpdating] = useState(false);
+
+  const handleIncrement = async() => {
+    setIsUpdating(true);
+    await setCounter(prev => prev + 1);
+    setIsUpdating(false);
+  };
+
+  const handleDecrement = async() => {
+    setIsUpdating(true);
+    await setCounter(prev => prev - 1);
+    setIsUpdating(false);
+  };
+
+  const handleReset = async() => {
+    setIsUpdating(true);
+    await setCounter(50);
+    setIsUpdating(false);
+  };
+
+  if (isLoading) {
+    return <div>Loading counter...</div>;
+  }
+
+  if (error) {
+    return <div>Error loading counter: {error.message}</div>;
+  }
+
+  return (
+    <div style={{ padding: '20px', border: '1px solid #ccc', borderRadius: '8px' }}>
+      <h3>Async Counter with Debounce (2s)</h3>
+      <div style={{ fontSize: '24px', margin: '10px 0' }}>
+        Count: {counter}
+      </div>
+
+      <div style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
+        <button
+          onClick={handleDecrement}
+          disabled={isUpdating || isPersisting}
+        >
+          {isUpdating ? 'Updating...' : 'Decrement'}
+        </button>
+        <button
+          onClick={handleIncrement}
+          disabled={isUpdating || isPersisting}
+        >
+          {isUpdating ? 'Updating...' : 'Increment'}
+        </button>
+        <button
+          onClick={handleReset}
+          disabled={isUpdating || isPersisting}
+        >
+          {isUpdating ? 'Updating...' : 'Reset to 50'}
+        </button>
+      </div>
+
+      {isPersisting && (
+        <div style={{ color: 'orange', fontSize: '12px' }}>
+          💾 Saving to storage...
+        </div>
+      )}
+
+      <div style={{ fontSize: '12px', color: '#666', marginTop: '10px' }}>
+        💡 Changes are debounced and saved 2 seconds after the last update
+      </div>
+    </div>
+  );
+}
+```
+
+#### Async Profile Management
+Shows complex state management with nested objects and multiple async operations.
+
+```tsx
+// file: components/AsyncProfile.tsx
+
+import { useState, useEffect } from 'react';
+import useAsyncProfile from '../stores/async-profile';
+
+function AsyncProfile() {
+  const [profile, setProfile, { isLoading, error }] = useAsyncProfile();
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [formData, setFormData] = useState({
+    name: profile.name,
+    email: profile.email
+  });
+
+  // Sync formData with profile when profile changes
+  useEffect(() => {
+    setFormData({
+      name: profile.name,
+      email: profile.email
+    });
+  }, [profile.name, profile.email]);
+
+  const handleUpdateProfile = async() => {
+    setIsUpdating(true);
+    try {
+      await setProfile(prev => ({
+        ...prev,
+        name: formData.name,
+        email: formData.email,
+        lastUpdated: new Date().toISOString()
+      }));
+    } catch (err) {
+      console.error('Failed to update profile:', err);
+    } finally {
+      setIsUpdating(false);
+    }
+  };
+
+  const handleToggleTheme = async() => {
+    setIsUpdating(true);
+    try {
+      await setProfile(prev => ({
+        ...prev,
+        preferences: {
+          ...prev.preferences,
+          theme: prev.preferences.theme === 'light' ? 'dark' : 'light'
+        },
+        lastUpdated: new Date().toISOString()
+      }));
+    } catch (err) {
+      console.error('Failed to toggle theme:', err);
+    } finally {
+      setIsUpdating(false);
+    }
+  };
+
+  if (isLoading) {
+    return <div>Loading profile...</div>;
+  }
+
+  if (error) {
+    return <div>Error loading profile: {error.message}</div>;
+  }
+
+  return (
+    <div style={{ padding: '20px', border: '1px solid #ccc', borderRadius: '8px' }}>
+      <h3>Async Profile Management</h3>
+
+      <div style={{ marginBottom: '15px' }}>
+        <label>
+          Name:
+          <input
+            type="text"
+            value={formData.name}
+            onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+            style={{ marginLeft: '10px', padding: '5px' }}
+          />
+        </label>
+      </div>
+
+      <div style={{ marginBottom: '15px' }}>
+        <label>
+          Email:
+          <input
+            type="email"
+            value={formData.email}
+            onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
+            style={{ marginLeft: '10px', padding: '5px' }}
+          />
+        </label>
+      </div>
+
+      <div style={{ display: 'flex', gap: '10px', marginBottom: '15px' }}>
+        <button
+          onClick={handleUpdateProfile}
+          disabled={isUpdating}
+        >
+          {isUpdating ? 'Updating...' : 'Update Profile'}
+        </button>
+        <button
+          onClick={handleToggleTheme}
+          disabled={isUpdating}
+        >
+          {isUpdating ? 'Updating...' : `Switch to ${profile.preferences.theme === 'light' ? 'Dark' : 'Light'}`}
+        </button>
+      </div>
+
+      <div style={{ fontSize: '12px', color: '#666' }}>
+        <div>Current Theme: {profile.preferences.theme}</div>
+        <div>Last Updated: {new Date(profile.lastUpdated).toLocaleString()}</div>
+      </div>
+    </div>
+  );
+}
+
+export default AsyncProfile;
+```
+
 ### Custom hooks
 Can't find your cases in this documentation examples? You can create custom hooks by yourself.
 Here is complex example you can refer the pattern to create another custom hooks cases.
@@ -392,6 +715,14 @@ export default App;
 # Demo
 You can see live demo [here](https://swr-global-state-demo.gading.dev/)
 
+**Featured Demos:**
+- **Basic Counter**: Simple state management without persistence
+- **Persisted Counter**: State that survives page refreshes using localStorage
+- **Async Counter**: Demonstrates async operations with loading states and debounce rate limiting
+- **Async Profile**: Complex nested state management with multiple async operations
+- **Rate Limit Demo**: Search functionality with throttle rate limiting to prevent excessive calls
+- **Custom Rate Limiting**: Advanced rate limiting combining debounce and throttle strategies
+
 # FAQ
 ## Why should I use this?
 - If you want to manage your global state like `useState` as usual.
@@ -399,11 +730,15 @@ You can see live demo [here](https://swr-global-state-demo.gading.dev/)
 - If you want to see `Redux` or `Context API` alternative.
 - If you're already use `SWR`, but you have no idea how to manage synchronous global state with `SWR` on client-side.
 - If you're still use `Redux` or `Context API`, but you are overwhelmed with their flow.
+- If you need built-in rate limiting for performance optimization.
+- If you want async state management with loading states out of the box.
 
 ## If this library can cover `Redux`, how about asynchronous state management like `redux-saga`, `redux-thunk`, or `redux-promise`?
 [SWR](https://swr.vercel.app) can cover this. [see](https://github.com/vercel/swr/discussions/587).
 
 At this point, `swr-global-state` is based and depends on [SWR](https://www.npmjs.com/package/swr). After version `>2` or later, `swr-global-state` now can handle *async state* too. Just wraps your *very async state logic* into a function like in [Custom Hooks](#custom-hooks) or [Asynchronous Persistor](#asynchronous-persistor).
+
+Additionally, `swr-global-state` provides built-in rate limiting strategies (debounce, throttle, custom) that help optimize performance for frequent state updates, which is especially useful for async operations.
 
 So, you basically don't need to use `Redux` or `Context API` anymore. Alternatively, you can choose [TanStack Query](https://tanstack.com/query) or default [SWR](https://swr.vercel.app) itself.
 
