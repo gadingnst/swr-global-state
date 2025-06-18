@@ -10,12 +10,6 @@
     },
     "dev": {
       "cache": false
-    },
-    "test": {
-      "outputs": []
-    },
-    "test:coverage": {
-      "cache": false
     }
   }
 }
