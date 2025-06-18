@@ -19,7 +19,7 @@
     "dist"
   ],
   "engines": {
-    "node": ">=10"
+    "node": ">=18"
   },
   "scripts": {
     "start": "vite build --watch",
@@ -31,7 +31,7 @@
   },
   "size-limit": [
     {
-      "path": "dist/swr-global-state.cjs.production.min.js",
+      "path": "dist/index.js",
       "limit": "10 KB"
     },
     {
@@ -49,7 +49,6 @@
     "@vitejs/plugin-react": "^4.5.0",
     "eslint-config-custom": "*",
     "size-limit": "^8.2.6",
-    "tslib": "^2.6.1",
     "typescript": "^5.8.3",
     "vite": "^6.3.5"
   },
