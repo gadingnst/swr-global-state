@@ -30,6 +30,7 @@ Zero-setup & simple global state management for React Components based on [SWR](
       - [Async Profile Management](#async-profile-management)
     - [Custom hooks](#custom-hooks)
 - [Demo](#demo)
+- [AI/LLM Usage](#aillm-usage)
 - [FAQ](#faq)
   - [Why should I use this?](#why-should-i-use-this)
   - [If this library can cover `Redux`, how about asynchronous state management like `redux-saga`, `redux-thunk`, or `redux-promise`?](#if-this-library-can-cover-redux-how-about-asynchronous-state-management-like-redux-saga-redux-thunk-or-redux-promise)
@@ -721,6 +722,29 @@ You can see live demo [here](https://swr-global-state-demo.gading.dev/)
 - **Async Profile**: Complex nested state management with multiple async operations
 - **Rate Limit Demo**: Search functionality with throttle rate limiting to prevent excessive calls
 - **Custom Rate Limiting**: Advanced rate limiting combining debounce and throttle strategies
+
+# AI/LLM Usage
+
+For AI assistants and Large Language Models (LLMs) working with this library, we provide comprehensive usage rules and patterns to help understand and implement `swr-global-state` effectively.
+
+## AI Usage Rules
+
+A detailed guide for AI assistants is available that covers:
+- Core concepts and API reference
+- Usage patterns and best practices
+- Persistence strategies (localStorage, AsyncStorage)
+- Rate limiting techniques (debounce, throttle, custom)
+- Error handling and async state management
+- Common implementation patterns
+
+**📖 View the complete AI usage rules:** [llm-rules.md](https://raw.githubusercontent.com/gadingnst/swr-global-state/refs/heads/main/llm-rules.md)
+
+This guide is specifically designed to help AI assistants:
+- Understand the library's architecture and patterns
+- Generate appropriate code examples
+- Implement best practices for different use cases
+- Handle edge cases and error scenarios
+- Optimize performance with rate limiting
 
 # FAQ
 ## Why should I use this?
