@@ -1,5 +1,5 @@
-import { SWRConfiguration } from 'swr';
-import { StoreParams, useStore } from './useStore';
+import type { SWRConfiguration } from 'swr';
+import { type StoreParams, useStore } from './lib/useStore';
 
 /**
  * Create custom hooks that wraps `useStore` to another function.
@@ -13,7 +13,7 @@ export function createStore<T, E = any>(data: StoreParams<T>, swrConfig?: SWRCon
   }, swrConfig);
 }
 
-export * from './useStore';
+export * from './lib/useStore';
 
 const sgs = {
   createStore,
