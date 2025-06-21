@@ -93,27 +93,6 @@ export function useStore<T, E = any>(
     );
   }, [persistor?.onSet, rateLimit, onError, retryOnError]);
 
-  // Initialize rate limited persist function dengan proper cleanup
-  useEffect(() => {
-    if (rateLimit && !rateLimitedPersistRef.current) {
-      const rateLimitedPersist = createRateLimitedPersist();
-      if (rateLimitedPersist) {
-        rateLimitedPersistRef.current = {
-          func: rateLimitedPersist.rateLimitedFunc,
-          cleanup: rateLimitedPersist.cleanup
-        };
-      }
-    }
-
-    // Cleanup function
-    return () => {
-      if (rateLimitedPersistRef.current) {
-        rateLimitedPersistRef.current.cleanup();
-        rateLimitedPersistRef.current = null;
-      }
-    };
-  }, [rateLimit, createRateLimitedPersist]);
-
   const swrFetcher = useCallback(async() => {
     try {
       const currentCacheData = cache.get(cacheKey)?.data;
@@ -187,6 +166,27 @@ export function useStore<T, E = any>(
     error,
     isPersisting
   }), [swrResponse, isLoading, error, isPersisting]);
+
+  // Initialize rate limited persist function dengan proper cleanup
+  useEffect(() => {
+    if (rateLimit && !rateLimitedPersistRef.current) {
+      const rateLimitedPersist = createRateLimitedPersist();
+      if (rateLimitedPersist) {
+        rateLimitedPersistRef.current = {
+          func: rateLimitedPersist.rateLimitedFunc,
+          cleanup: rateLimitedPersist.cleanup
+        };
+      }
+    }
+
+    // Cleanup function
+    return () => {
+      if (rateLimitedPersistRef.current) {
+        rateLimitedPersistRef.current.cleanup();
+        rateLimitedPersistRef.current = null;
+      }
+    };
+  }, [rateLimit, createRateLimitedPersist]);
 
   return [
     state as T,
