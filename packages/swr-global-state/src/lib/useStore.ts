@@ -68,7 +68,7 @@ export function useStore<T, E = any>(
   const rateLimitedPersistRef = useRef<{
     func: (key: StateKey, data: T) => void;
     cleanup: () => void;
-  } | null>(null);
+      } | null>(null);
   const [isPersisting, setIsPersisting] = useState(false);
 
   const createRateLimitedPersist = useCallback(() => {
@@ -91,28 +91,8 @@ export function useStore<T, E = any>(
       () => setIsPersisting(true),
       () => setIsPersisting(false)
     );
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [persistor?.onSet, rateLimit, onError, retryOnError]);
-
-  // Initialize rate limited persist function dengan proper cleanup
-  useEffect(() => {
-    if (rateLimit && !rateLimitedPersistRef.current) {
-      const rateLimitedPersist = createRateLimitedPersist();
-      if (rateLimitedPersist) {
-        rateLimitedPersistRef.current = {
-          func: rateLimitedPersist.rateLimitedFunc,
-          cleanup: rateLimitedPersist.cleanup
-        };
-      }
-    }
-
-    // Cleanup function
-    return () => {
-      if (rateLimitedPersistRef.current) {
-        rateLimitedPersistRef.current.cleanup();
-        rateLimitedPersistRef.current = null;
-      }
-    };
-  }, [rateLimit, createRateLimitedPersist]);
 
   const swrFetcher = useCallback(async() => {
     try {
@@ -133,6 +113,7 @@ export function useStore<T, E = any>(
       }
       return cache.get(cacheKey)?.data ?? initial;
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cache, cacheKey, persistor?.onGet, key, initial, onError, retryOnError]);
 
   const swrResponse = useSWR(key, swrFetcher, {
@@ -179,6 +160,7 @@ export function useStore<T, E = any>(
       await setPersist(newData);
       return newData;
     }, opts);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mutate, key, persistor?.onSet, onError, retryOnError, cacheKey]);
 
   const returnObject = useMemo(() => ({
@@ -187,6 +169,27 @@ export function useStore<T, E = any>(
     error,
     isPersisting
   }), [swrResponse, isLoading, error, isPersisting]);
+
+  // Initialize rate limited persist function dengan proper cleanup
+  useEffect(() => {
+    if (rateLimit && !rateLimitedPersistRef.current) {
+      const rateLimitedPersist = createRateLimitedPersist();
+      if (rateLimitedPersist) {
+        rateLimitedPersistRef.current = {
+          func: rateLimitedPersist.rateLimitedFunc,
+          cleanup: rateLimitedPersist.cleanup
+        };
+      }
+    }
+
+    // Cleanup function
+    return () => {
+      if (rateLimitedPersistRef.current) {
+        rateLimitedPersistRef.current.cleanup();
+        rateLimitedPersistRef.current = null;
+      }
+    };
+  }, [rateLimit, createRateLimitedPersist]);
 
   return [
     state as T,
