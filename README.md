@@ -20,7 +20,6 @@ Zero-setup & simple global state management for React Components based on [SWR](
       - [Creating Persisted State](#creating-persisted-state)
       - [Reusable Persistor (Example in TypeScript)](#reusable-persistor-example-in-typescript)
       - [Asynchronous Persistor](#asynchronous-persistor)
-      - [Best Practice with Persistor](#best-practice-with-persistor)
     - [Rate Limiting](#rate-limiting)
       - [Debounce Rate Limiting](#debounce-rate-limiting)
       - [Throttle Rate Limiting](#throttle-rate-limiting)
@@ -226,46 +225,6 @@ const useCounter = createStore({
 });
 
 export default useCounter;
-```
-
-#### Best Practice with Persistor
-Best practice in using `persistor` is use [Debouncing Technique](https://www.google.com/search?q=debounce+technique+programming). This example is using `debouncing` in `onSet` callback. So, it will not spamming to call the callback request every state changes.
-```js
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { createStore } from "swr-global-state";
-
-const withDebounce = (fn, time) => {
-  let timeoutId;
-  const wrapper = (...args) => {
-    if (timeoutId) {
-      clearTimeout(timeoutId);
-    }
-    timeoutId = setTimeout(() => {
-      timeoutId = null;
-      fn(...args);
-    }, time);
-  };
-  return wrapper;
-};
-
-const useUser = createStore({
-  key: "@app/user",
-  initial: null,
-  persistor: {
-    onSet: withDebounce(async(key, user) => {
-      try {
-        const stringifyUser = JSON.stringify(user)
-        await AsyncStorage.setItem(String(key), stringifyUser);
-      } catch (err) {
-        // handle saving error, default throw an error
-        throw new Error(err);
-      }
-    }, 1000), // debounce-effect in 1 second.
-    ...
-  }
-});
-
-export default useUser;
 ```
 
 ### Rate Limiting
