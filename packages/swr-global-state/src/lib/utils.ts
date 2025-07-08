@@ -5,7 +5,7 @@ export type RateLimitType = 'debounce' | 'throttle';
 export type RateLimitConfig<T> = {
   type: RateLimitType;
   delay: number;
-  // Optional custom function untuk advanced use cases
+  // Optional custom function for advanced use cases
   customFunction?: (func: (key: Key, data: T) => Promise<void>, delay: number) => (key: Key, data: T) => void;
 };
 

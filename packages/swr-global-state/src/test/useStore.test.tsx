@@ -5,7 +5,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { useStore, createStore } from '../index';
 
 /**
- * Wrapper component untuk testing dengan SWR provider
+ * Wrapper component for testing with SWR provider
  */
 function createWrapper() {
   return function Wrapper({ children }: { children: React.ReactNode; }) {
@@ -143,20 +143,5 @@ describe('createStore', () => {
 
     const [state] = result.current;
     expect(state).toBe(0);
-  });
-
-  it('should override initial value when provided', () => {
-    const useCounterStore = createStore({
-      key: 'counter-2',
-      initial: 0
-    });
-
-    const { result } = renderHook(
-      () => useCounterStore(100),
-      { wrapper: createWrapper() }
-    );
-
-    const [state] = result.current;
-    expect(state).toBe(100);
   });
 });

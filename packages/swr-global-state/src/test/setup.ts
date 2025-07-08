@@ -2,13 +2,13 @@ import '@testing-library/jest-dom';
 import { vi, afterEach } from 'vitest';
 import { cleanup } from '@testing-library/react';
 
-// Cleanup setelah setiap test
+// Cleanup after every test
 afterEach(() => {
   cleanup();
   vi.clearAllMocks();
 });
 
-// Mock untuk localStorage jika diperlukan
+// Mock for localStorage if needed
 Object.defineProperty(window, 'localStorage', {
   value: {
     getItem: vi.fn(),

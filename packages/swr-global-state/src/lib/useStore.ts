@@ -170,7 +170,6 @@ export function useStore<T, E = any>(
     isPersisting
   }), [swrResponse, isLoading, error, isPersisting]);
 
-  // Initialize rate limited persist function dengan proper cleanup
   useEffect(() => {
     if (rateLimit && !rateLimitedPersistRef.current) {
       const rateLimitedPersist = createRateLimitedPersist();
@@ -182,14 +181,14 @@ export function useStore<T, E = any>(
       }
     }
 
-    // Cleanup function
     return () => {
       if (rateLimitedPersistRef.current) {
         rateLimitedPersistRef.current.cleanup();
         rateLimitedPersistRef.current = null;
       }
     };
-  }, [rateLimit, createRateLimitedPersist]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [createRateLimitedPersist]);
 
   return [
     state as T,
