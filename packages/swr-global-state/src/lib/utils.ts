@@ -1,4 +1,4 @@
-import type { Key } from "swr";
+import type { Key } from 'swr';
 
 export type RateLimitType = 'debounce' | 'throttle';
 
@@ -88,6 +88,7 @@ export function createRateLimitedFunctionWithCleanup<T>(
   if (config.customFunction) {
     return {
       rateLimitedFunc: config.customFunction(func, config.delay),
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
       cleanup: () => {} // Custom function should handle its own cleanup
     };
   }
@@ -113,6 +114,7 @@ export function createRateLimitedFunctionWithCleanup<T>(
     default:
       return {
         rateLimitedFunc: wrappedFunc as any,
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
         cleanup: () => {}
       };
   }
