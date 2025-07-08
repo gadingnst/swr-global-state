@@ -157,7 +157,7 @@ export function useStore<T, E = any>(
         ? { revalidate: opts }
         : opts ? { ...opts } : { revalidate: false };
 
-      mutate(mutator as any, mutateOpts);
+      mutate(mutator, mutateOpts);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [mutate, key, persistor?.onSet, onError, state]
