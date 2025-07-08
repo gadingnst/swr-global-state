@@ -5,7 +5,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { useStore, createStore } from '../index';
 
 /**
- * Wrapper component untuk testing dengan SWR provider
+ * Wrapper component for testing with SWR provider
  */
 function createWrapper() {
   return function Wrapper({ children }: { children: React.ReactNode; }) {

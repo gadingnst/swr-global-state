@@ -1,11 +1,11 @@
-import type { Key } from "swr";
+import type { Key } from 'swr';
 
 export type RateLimitType = 'debounce' | 'throttle';
 
 export type RateLimitConfig<T> = {
   type: RateLimitType;
   delay: number;
-  // Optional custom function untuk advanced use cases
+  // Optional custom function for advanced use cases
   customFunction?: (func: (key: Key, data: T) => Promise<void>, delay: number) => (key: Key, data: T) => void;
 };
 
@@ -19,7 +19,7 @@ export function debounceWithCleanup<T extends(...args: any[]) => any>(func: T, d
   debouncedFunc: T;
   cleanup: () => void;
 } {
-  let timeoutId: NodeJS.Timeout;
+  let timeoutId: ReturnType<typeof setTimeout>;
 
   const debouncedFunc = ((...args: any[]) => {
     clearTimeout(timeoutId);
@@ -44,7 +44,7 @@ export function throttleWithCleanup<T extends(...args: any[]) => any>(func: T, d
   cleanup: () => void;
 } {
   let lastCall = 0;
-  let timeoutId: NodeJS.Timeout;
+  let timeoutId: ReturnType<typeof setTimeout>;
 
   const throttledFunc = ((...args: any[]) => {
     const now = Date.now();
@@ -88,6 +88,7 @@ export function createRateLimitedFunctionWithCleanup<T>(
   if (config.customFunction) {
     return {
       rateLimitedFunc: config.customFunction(func, config.delay),
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
       cleanup: () => {} // Custom function should handle its own cleanup
     };
   }
@@ -113,6 +114,7 @@ export function createRateLimitedFunctionWithCleanup<T>(
     default:
       return {
         rateLimitedFunc: wrappedFunc as any,
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
         cleanup: () => {}
       };
   }

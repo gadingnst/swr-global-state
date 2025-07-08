@@ -127,41 +127,41 @@ export function useStore<T, E = any>(
 
   const { data: state, mutate, error, isLoading } = swrResponse;
 
-  const setState: StateMutator<T> = useCallback(async(data: T|StateMutatorCallback<T>, opts?: boolean|MutatorOptions<T>) => {
-    return mutate(async(currentData: T | undefined) => {
-      const actualCurrentData = currentData ?? cache.get(cacheKey)?.data ?? state;
+  const setState: StateMutator<T> = useCallback(
+    (data: T | StateMutatorCallback<T>, opts?: boolean | MutatorOptions<T>) => {
+      const mutator = (currentData: T | undefined): T => {
+        const resolvedCurrentData = currentData ?? state;
 
-      const setPersist = async(newState: T) => {
+        const newData = typeof data === 'function'
+          ? (data as (currentState: T) => T)(resolvedCurrentData as T)
+          : data;
+
+        if (JSON.stringify(newData) === JSON.stringify(resolvedCurrentData)) {
+          return resolvedCurrentData as T;
+        }
+
         if (persistor?.onSet) {
           if (rateLimitedPersistRef.current) {
-            // Use rate limited persist
-            rateLimitedPersistRef.current.func(key, newState);
+            rateLimitedPersistRef.current.func(key, newData);
           } else {
-            // Immediate persist for non-rate-limited operations
-            try {
-              await Promise.resolve(persistor.onSet(key, newState));
-            } catch (error) {
+            Promise.resolve(persistor.onSet(key, newData)).catch(error => {
               onError?.(error as Error);
-              if (!retryOnError) {
-                throw error;
-              }
-            }
+            });
           }
         }
+
+        return newData;
       };
 
-      if (typeof data !== 'function') {
-        await setPersist(data);
-        return data;
-      }
+      const mutateOpts = typeof opts === 'boolean'
+        ? { revalidate: opts }
+        : opts ? { ...opts } : { revalidate: false };
 
-      const mutatorCallback = data as StateMutatorCallback<T>;
-      const newData = await Promise.resolve(mutatorCallback(actualCurrentData as T));
-      await setPersist(newData);
-      return newData;
-    }, opts);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mutate, key, persistor?.onSet, onError, retryOnError, cacheKey]);
+      mutate(mutator, mutateOpts);
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [mutate, key, persistor?.onSet, onError]
+  );
 
   const returnObject = useMemo(() => ({
     ...swrResponse,
@@ -170,7 +170,6 @@ export function useStore<T, E = any>(
     isPersisting
   }), [swrResponse, isLoading, error, isPersisting]);
 
-  // Initialize rate limited persist function dengan proper cleanup
   useEffect(() => {
     if (rateLimit && !rateLimitedPersistRef.current) {
       const rateLimitedPersist = createRateLimitedPersist();
@@ -182,14 +181,14 @@ export function useStore<T, E = any>(
       }
     }
 
-    // Cleanup function
     return () => {
       if (rateLimitedPersistRef.current) {
         rateLimitedPersistRef.current.cleanup();
         rateLimitedPersistRef.current = null;
       }
     };
-  }, [rateLimit, createRateLimitedPersist]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [createRateLimitedPersist]);
 
   return [
     state as T,

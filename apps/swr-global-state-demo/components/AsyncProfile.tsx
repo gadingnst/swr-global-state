@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { useState, useEffect } from 'react';
 import useAsyncProfile from '../states/stores/async-profile';
 
