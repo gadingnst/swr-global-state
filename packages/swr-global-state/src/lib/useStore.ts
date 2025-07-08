@@ -160,7 +160,7 @@ export function useStore<T, E = any>(
       mutate(mutator, mutateOpts);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [mutate, key, persistor?.onSet, onError, state]
+    [mutate, key, persistor?.onSet, onError]
   );
 
   const returnObject = useMemo(() => ({

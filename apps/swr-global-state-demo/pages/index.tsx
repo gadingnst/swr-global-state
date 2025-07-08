@@ -28,6 +28,9 @@ const Home = () => {
           <Link className="App-link" href="/async-demo">
             Try Async Storage Demo
           </Link>
+          <Link className="App-link" href="/test-input">
+            Test Input
+          </Link>
         </div>
       </header>
     </div>
