@@ -6,10 +6,10 @@ import { type StoreParams, useStore } from './lib/useStore';
  * @param {StoreParams<T>} data state that to be shared or cached
  * @see https://github.com/gadingnst/swr-global-state#creating-a-store
  */
-export function createStore<T, E = any>(data: StoreParams<T>) {
-  return (swrConfig?: SWRConfiguration) => useStore<T, E>({
+export function createStore<T, E = any>(data: StoreParams<T>, swrConfig?: SWRConfiguration) {
+  return (initial?: T) => useStore<T, E>({
     ...data,
-    initial: data.initial
+    initial: initial ?? data.initial
   }, swrConfig);
 }
 
