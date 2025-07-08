@@ -19,7 +19,7 @@ export function debounceWithCleanup<T extends(...args: any[]) => any>(func: T, d
   debouncedFunc: T;
   cleanup: () => void;
 } {
-  let timeoutId: NodeJS.Timeout;
+  let timeoutId: ReturnType<typeof setTimeout>;
 
   const debouncedFunc = ((...args: any[]) => {
     clearTimeout(timeoutId);
@@ -44,7 +44,7 @@ export function throttleWithCleanup<T extends(...args: any[]) => any>(func: T, d
   cleanup: () => void;
 } {
   let lastCall = 0;
-  let timeoutId: NodeJS.Timeout;
+  let timeoutId: ReturnType<typeof setTimeout>;
 
   const throttledFunc = ((...args: any[]) => {
     const now = Date.now();
